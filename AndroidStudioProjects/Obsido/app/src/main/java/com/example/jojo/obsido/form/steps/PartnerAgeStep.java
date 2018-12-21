@@ -7,10 +7,10 @@ import android.widget.EditText;
 
 import ernestoyaquello.com.verticalstepperform.Step;
 
-public class PartnerDescriptionStep extends Step<String> {
+public class PartnerAgeStep extends Step<String> {
 
-    private EditText partnerDescriptionView;
-    public PartnerDescriptionStep(String stepTitle) {
+    private EditText mPartnerAgeView;
+    public PartnerAgeStep(String stepTitle) {
         super(stepTitle);
     }
 
@@ -18,11 +18,11 @@ public class PartnerDescriptionStep extends Step<String> {
     protected View createStepContentLayout() {
         // Here we generate the view that will be used by the library as the content of the step.
         // In this case we do it programmatically, but we could also do it by inflating an XML layout.
-        partnerDescriptionView = new EditText(getContext());
-        partnerDescriptionView.setSingleLine(true);
-        partnerDescriptionView.setHint("Partner Description");
+        mPartnerAgeView = new EditText(getContext());
+        mPartnerAgeView.setSingleLine(true);
+        mPartnerAgeView.setHint("Partner Name");
 
-        partnerDescriptionView.addTextChangedListener(new TextWatcher() {
+        mPartnerAgeView.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -39,19 +39,25 @@ public class PartnerDescriptionStep extends Step<String> {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         });
 
-        return partnerDescriptionView;
+        return mPartnerAgeView;
     }
 
     @Override
     protected IsDataValid isStepDataValid(String stepData) {
-        return new IsDataValid(true);
+        // The step's data (i.e., the user name) will be considered valid only if it is longer than
+        // three characters. In case it is not, we will display an error message for feedback.
+        // In an optional step, you should implement this method to always return a valid value.
+        boolean isNameValid = stepData.length() >= 3;
+        String errorMessage = !isNameValid ? "3 characters minimum" : "";
+
+        return new IsDataValid(isNameValid, errorMessage);
     }
 
     @Override
     public String getStepData() {
         // We get the step's data from the value that the user has typed in the EditText view.
-        Editable userDescription = partnerDescriptionView.getText();
-        return userDescription != null ? userDescription.toString() : "";
+        Editable userName = mPartnerAgeView.getText();
+        return userName != null ? userName.toString() : "";
     }
 
     @Override
@@ -59,8 +65,8 @@ public class PartnerDescriptionStep extends Step<String> {
         // Because the step's data is already a human-readable string, we don't need to convert it.
         // However, we return "(Empty)" if the text is empty to avoid not having any text to display.
         // This string will be displayed in the subtitle of the step whenever the step gets closed.
-        String userDescription = getStepData();
-        return userDescription == null || userDescription.isEmpty() ? "" : userDescription;
+        String userName = getStepData();
+        return !userName.isEmpty() ? userName : "(Empty)";
     }
 
     @Override
@@ -86,11 +92,22 @@ public class PartnerDescriptionStep extends Step<String> {
     @Override
     public void restoreStepData(String stepData) {
         // To restore the step after a configuration change, we restore the text of its EditText view.
-        if(partnerDescriptionView != null) {
-            partnerDescriptionView.setText(stepData);
-        }
+        mPartnerAgeView.setText(stepData);
     }
 
 
+    /**
+     * Age holder class for the age.
+     *
+     * Requirements:
+     *  Should not allow negative values
+     */
+    public static class AgeHolder {
 
+        public int age;
+
+        public AgeHolder(int age) {
+            this.age = age;
+        }
+    }
 }
