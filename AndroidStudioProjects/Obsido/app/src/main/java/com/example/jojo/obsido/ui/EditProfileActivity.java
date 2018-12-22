@@ -22,7 +22,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
 
     private PartnerNameStep mPartnerNameStep;
     private PartnerDescriptionStep mPartnerDescriptionStep;
-    //TODO initialise - private PartnerGenderStep mPartnerGenderStep;
+    // TODO: initialise - private PartnerGenderStep mPartnerGenderStep;
     private PartnerAgeStep mPartnerAgeStep;
 
     private VerticalStepperFormView verticalStepperForm;
@@ -81,8 +81,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             setTheme(R.style.AppThemeRed);
 
             verticalStepperForm
-                    .setup(this, mPartnerNameStep, mPartnerDescriptionStep,
-                            mPartnerAgeStep)
+                    .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
                     .stepNumberColors(getResources().getColor(R.color.colorPrimaryRed),
                             getResources().getColor(R.color.verticalStepperTextColor))
                     .nextButtonColors(getResources().getColor(R.color.colorPrimaryRed),
@@ -94,8 +93,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             setTheme(R.style.AppThemeBlue);
 
             verticalStepperForm
-                    .setup(this, mPartnerNameStep, mPartnerDescriptionStep,
-                            mPartnerAgeStep)
+                    .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
                     .stepNumberColors(getResources().getColor(R.color.colorPrimaryBlue),
                             getResources().getColor(R.color.verticalStepperTextColor))
                     .nextButtonColors(getResources().getColor(R.color.colorPrimaryBlue),
@@ -109,8 +107,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             setTheme(R.style.AppThemeGreen);
 
             verticalStepperForm
-                    .setup(this, mPartnerNameStep, mPartnerDescriptionStep,
-                            mPartnerAgeStep)
+                    .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
                     .stepNumberColors(getResources().getColor(R.color.colorPrimaryGreen),
                             getResources().getColor(R.color.verticalStepperTextColor))
                     .nextButtonColors(getResources().getColor(R.color.colorPrimaryGreen),
@@ -124,8 +121,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             setTheme(R.style.AppThemePink);
 
             verticalStepperForm
-                    .setup(this, mPartnerNameStep, mPartnerDescriptionStep,
-                            mPartnerAgeStep)
+                    .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
                     .stepNumberColors(getResources().getColor(R.color.colorPrimaryPink),
                             getResources().getColor(R.color.verticalStepperTextColor))
                     .nextButtonColors(getResources().getColor(R.color.colorPrimaryPink),

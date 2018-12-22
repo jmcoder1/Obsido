@@ -1,63 +1,63 @@
 package com.example.jojo.obsido.form.steps;
 
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.TextView;
+
+import com.shawnlin.numberpicker.NumberPicker;
+import com.example.jojo.obsido.R;
 
 import ernestoyaquello.com.verticalstepperform.Step;
 
-public class PartnerAgeStep extends Step<String> {
+public class PartnerAgeStep extends Step<PartnerAgeStep.AgeHolder> {
 
-    private EditText mPartnerAgeView;
+    private static final String LOG_TAG = "PartnerAgeStep".getClass().getSimpleName();
+
+    private static final int DEFAULT_PARTNER_AGE = 18;
+    private static final int MAX_PARTNER_AGE = 999;
+    private static final int MIN_PARTNER_AGE = 0;
+
+
+    private NumberPicker mNumberPicker;
+
+    private int mPartnerAge;
+
+
+
     public PartnerAgeStep(String stepTitle) {
         super(stepTitle);
+
+        mPartnerAge = DEFAULT_PARTNER_AGE;
     }
 
     @Override
     protected View createStepContentLayout() {
         // Here we generate the view that will be used by the library as the content of the step.
         // In this case we do it programmatically, but we could also do it by inflating an XML layout.
-        mPartnerAgeView = new EditText(getContext());
-        mPartnerAgeView.setSingleLine(true);
-        mPartnerAgeView.setHint("Partner Name");
 
-        mPartnerAgeView.addTextChangedListener(new TextWatcher() {
+        // We create this step view by inflating an XML layout
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View ageStepContent = inflater.inflate(R.layout.step_age_layout, null, false);
+        mNumberPicker = ageStepContent.findViewById(R.id.age_number_picker);
+        setupPartnerAge();
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Whenever the user updates the user name text, we update the state of the step.
-                // The step will be marked as completed only if its data is valid, which will be
-                // checked with a call to isStepDataValid().
-                markAsCompletedOrUncompleted(true);
-            }
+        return ageStepContent;
+    }
 
-            @Override
-            public void afterTextChanged(Editable s) {}
+    private void setupPartnerAge() {
+        if (mNumberPicker != null) {
+            mNumberPicker.setMaxValue(MAX_PARTNER_AGE);
+            mNumberPicker.setMinValue(MIN_PARTNER_AGE);
+            mNumberPicker.setValue(DEFAULT_PARTNER_AGE); // possibly change this value the age value stored
+        }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-        });
-
-        return mPartnerAgeView;
     }
 
     @Override
-    protected IsDataValid isStepDataValid(String stepData) {
-        // The step's data (i.e., the user name) will be considered valid only if it is longer than
-        // three characters. In case it is not, we will display an error message for feedback.
-        // In an optional step, you should implement this method to always return a valid value.
-        boolean isNameValid = stepData.length() >= 3;
-        String errorMessage = !isNameValid ? "3 characters minimum" : "";
-
-        return new IsDataValid(isNameValid, errorMessage);
-    }
-
-    @Override
-    public String getStepData() {
-        // We get the step's data from the value that the user has typed in the EditText view.
-        Editable userName = mPartnerAgeView.getText();
-        return userName != null ? userName.toString() : "";
+    public AgeHolder getStepData() {
+        // We get the step's data from the user value
+        return new AgeHolder(mPartnerAge);
     }
 
     @Override
@@ -65,9 +65,10 @@ public class PartnerAgeStep extends Step<String> {
         // Because the step's data is already a human-readable string, we don't need to convert it.
         // However, we return "(Empty)" if the text is empty to avoid not having any text to display.
         // This string will be displayed in the subtitle of the step whenever the step gets closed.
-        String userName = getStepData();
-        return !userName.isEmpty() ? userName : "(Empty)";
+        String partnerAge = Integer.toString(getStepData().age);
+        return partnerAge;
     }
+
 
     @Override
     protected void onStepOpened(boolean animated) {
@@ -82,6 +83,7 @@ public class PartnerAgeStep extends Step<String> {
     @Override
     protected void onStepMarkedAsCompleted(boolean animated) {
         // This will be called automatically whenever the step is marked as completed.
+        updateTitle(Integer.toString(mPartnerAge), true);
     }
 
     @Override
@@ -89,10 +91,19 @@ public class PartnerAgeStep extends Step<String> {
         // This will be called automatically whenever the step is marked as uncompleted.
     }
 
+
     @Override
-    public void restoreStepData(String stepData) {
-        // To restore the step after a configuration change, we restore the text of its EditText view.
-        mPartnerAgeView.setText(stepData);
+    public void restoreStepData(AgeHolder data) {
+        // To restore the step after a configuration change, we restore the age TextView view
+        mPartnerAge = data.age;
+
+        mNumberPicker.setValue(data.age);// TODO: alarmTimePicker.updateTime(alarmTimeHour, alarmTimeMinutes);
+    }
+
+    @Override
+    protected IsDataValid isStepDataValid(AgeHolder stepData) {
+
+        return new IsDataValid(true);
     }
 
 
