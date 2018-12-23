@@ -11,10 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:np_orientation="horizontal"
-        app:np_dividerColor="@color/colorPrimary"
-        app:np_selectedTextColor="@color/colorPrimary"
-        app:np_selectedTextSize="40sp"
+        app:np_selectedTextSize="36sp"
+        app:np_dividerDistance="44sp"
         app:np_textColor="#000000"
-        app:np_textSize="36sp" />
+        app:np_textSize="32sp" />
 
 </LinearLayout>
