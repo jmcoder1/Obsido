@@ -20,7 +20,7 @@ public class PartnerNameStep extends Step<String> {
         // In this case we do it programmatically, but we could also do it by inflating an XML layout.
         partnerNameView = new EditText(getContext());
         partnerNameView.setSingleLine(true);
-        partnerNameView.setHint("Partner Name");
+        partnerNameView.setHint("Name");
 
         partnerNameView.addTextChangedListener(new TextWatcher() {
 

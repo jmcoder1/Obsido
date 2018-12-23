@@ -87,7 +87,10 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
                     .nextButtonColors(getResources().getColor(R.color.colorPrimaryRed),
                             getResources().getColor(R.color.colorPrimaryRedDark),
                             getResources().getColor(R.color.verticalStepperTextColor),
-                            getResources().getColor(R.color.verticalStepperTextColor)).init();
+                            getResources().getColor(R.color.verticalStepperTextColor))
+                    .errorMessageTextColor(getResources().getColor(R.color.colorPrimaryRedDark))
+                    .init();
+
             Log.v(LOG_TAG, "loadThemeFromPreferences: RED themes from Shared Preferences.");
         } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
             setTheme(R.style.AppThemeBlue);
@@ -100,6 +103,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
                             getResources().getColor(R.color.colorPrimaryBlueDark),
                             getResources().getColor(R.color.verticalStepperTextColor),
                             getResources().getColor(R.color.verticalStepperTextColor))
+                    .errorMessageTextColor(getResources().getColor(R.color.colorPrimaryBlueDark))
                     .init();
 
             Log.v(LOG_TAG, "loadThemeFromPreferences: BLUE themes from Shared Preferences.");
@@ -114,6 +118,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
                             getResources().getColor(R.color.colorPrimaryGreenDark),
                             getResources().getColor(R.color.verticalStepperTextColor),
                             getResources().getColor(R.color.verticalStepperTextColor))
+                    .errorMessageTextColor(getResources().getColor(R.color.colorPrimaryGreenDark))
                     .init();
 
             Log.v(LOG_TAG, "loadThemeFromPreferences: GREEN themes from Shared Preferences.");
@@ -128,6 +133,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
                             getResources().getColor(R.color.colorPrimaryPinkDark),
                             getResources().getColor(R.color.verticalStepperTextColor),
                             getResources().getColor(R.color.verticalStepperTextColor))
+                    .errorMessageTextColor(getResources().getColor(R.color.colorPrimaryPinkDark))
                     .init();
 
             Log.v(LOG_TAG, "loadThemeFromPreferences: PINK themes from Shared Preferences.");

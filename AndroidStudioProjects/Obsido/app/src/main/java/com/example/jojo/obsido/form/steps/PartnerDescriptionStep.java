@@ -20,7 +20,7 @@ public class PartnerDescriptionStep extends Step<String> {
         // In this case we do it programmatically, but we could also do it by inflating an XML layout.
         partnerDescriptionView = new EditText(getContext());
         partnerDescriptionView.setSingleLine(true);
-        partnerDescriptionView.setHint("Partner Description");
+        partnerDescriptionView.setHint("Description");
 
         partnerDescriptionView.addTextChangedListener(new TextWatcher() {
 
