@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.jojo.obsido.R;
@@ -13,7 +12,6 @@ import com.example.jojo.obsido.form.steps.PartnerAgeStep;
 import com.example.jojo.obsido.form.steps.PartnerDescriptionStep;
 import com.example.jojo.obsido.form.steps.PartnerNameStep;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -33,6 +31,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     // TODO: initialise - private PartnerGenderStep mPartnerGenderStep;
     private PartnerAgeStep mPartnerAgeStep;
 
+    // UI XML Views
     private VerticalStepperFormView verticalStepperForm;
     private Toolbar mToolbar;
     private SharedPreferences mSharedPreferences;
@@ -58,6 +57,37 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
         loadVerticalStepperSharedPreferences(mSharedPreferences);
     }
 
+    private void setUpSharedPreference() {
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        loadThemeFromPreferences(mSharedPreferences);
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    private void loadThemeFromPreferences(SharedPreferences sharedPreferences) {
+        String sharedPreferenceTheme = sharedPreferences.getString(getString(R.string.pref_theme_key),
+                getString(R.string.pref_show_red_theme_label));
+
+        Log.v(LOG_TAG, "loadThemeFromPreferences: load theme from preferences.");
+
+        if(sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
+            setTheme(R.style.AppThemeRed);
+
+            Log.v(LOG_TAG, "RED theme from Shared Preferences.");
+        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
+            setTheme(R.style.AppThemeBlue);
+
+            Log.v(LOG_TAG, "BLUE theme from Shared Preferences.");
+        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
+            setTheme(R.style.AppThemeGreen);
+
+            Log.v(LOG_TAG, "GREEN theme from Shared Preferences.");
+        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
+            setTheme(R.style.AppThemePink);
+
+            Log.v(LOG_TAG, "PINK theme from Shared Preferences.");
+        }
+    }
+
     @Override
     public void onCompletedForm() {
         // This method will be called when the user clicks on the last confirmation button of the
@@ -73,35 +103,6 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
 
     }
 
-    private void setUpSharedPreference() {
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        loadThemeFromPreferences(mSharedPreferences);
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onBackPressed() {
-        // If the partner hasn't changed, continue with handling back button press
-        /*if (!mPartner.getHasChanged()) {
-            super.onBackPressed();
-            return;
-        }*/
-
-        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-        // Create a click listener to handle the user confirming that changes should be discarded.
-        DialogInterface.OnClickListener discardButtonClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // User clicked "Discard" button, close the current activity.
-                        finish();
-                    }
-                };
-
-        // Show dialog that there are unsaved changes
-        showUnsavedChangesDialog(discardButtonClickListener);
-    }
-
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -111,7 +112,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
         String sharedPreferenceTheme = sharedPreferences.getString(getString(R.string.pref_theme_key),
                 getString(R.string.pref_show_red_theme_label));
 
-        Log.v(LOG_TAG, "loadThemeFromPreferences: load theme from preferences.");
+        Log.v(LOG_TAG, "loadVerticalStepperSharedPreferences: load theme from preferences.");
 
         if(sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
             verticalStepperForm
@@ -129,7 +130,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryRed));
             mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryRed));
 
-            Log.v(LOG_TAG, "loadThemeFromPreferences: RED themes from Shared Preferences.");
+            Log.v(LOG_TAG, "RED theme from Shared Preferences.");
         } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
             verticalStepperForm
                     .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
@@ -145,7 +146,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryBlue));
             mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryBlue));
 
-            Log.v(LOG_TAG, "loadThemeFromPreferences: BLUE themes from Shared Preferences.");
+            Log.v(LOG_TAG, "BLUE theme from Shared Preferences.");
         } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
             verticalStepperForm
                     .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
@@ -161,7 +162,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryGreen));
             mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryGreen));
 
-            Log.v(LOG_TAG, "loadThemeFromPreferences: GREEN themes from Shared Preferences.");
+            Log.v(LOG_TAG, "GREEN theme from Shared Preferences.");
         } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
             verticalStepperForm
                     .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
@@ -177,40 +178,22 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryPink));
             mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryPink));
 
-            Log.v(LOG_TAG, "loadThemeFromPreferences: PINK themes from Shared Preferences.");
-        }
-    }
-
-    private void loadThemeFromPreferences(SharedPreferences sharedPreferences) {
-        String sharedPreferenceTheme = sharedPreferences.getString(getString(R.string.pref_theme_key),
-                getString(R.string.pref_show_red_theme_label));
-
-        Log.v(LOG_TAG, "loadThemeFromPreferences: load theme from preferences.");
-
-        if(sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
-            setTheme(R.style.AppThemeRed);
-
-            Log.v(LOG_TAG, "loadThemeFromPreferences: RED themes from Shared Preferences.");
-        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
-            setTheme(R.style.AppThemeBlue);
-
-            Log.v(LOG_TAG, "loadThemeFromPreferences: BLUE themes from Shared Preferences.");
-        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
-            setTheme(R.style.AppThemeGreen);
-
-            Log.v(LOG_TAG, "loadThemeFromPreferences: GREEN themes from Shared Preferences.");
-        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
-            setTheme(R.style.AppThemePink);
-
-            Log.v(LOG_TAG, "loadThemeFromPreferences: PINK themes from Shared Preferences.");
+            Log.v(LOG_TAG, "PINK theme from Shared Preferences.");
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null) {
+            try {
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
         getMenuInflater().inflate(R.menu.menu_partners_editor, menu);
         return true;
     }
@@ -221,12 +204,8 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             case R.id.action_save:
                 // TODO: What to do when the form is completed
                 return true;
-            case android.R.id.home:
-                /*if (!mPartner.getHasChanged()) {
-                    finish();
-                    return true;
-                }*/
 
+            case android.R.id.home:
                 DialogInterface.OnClickListener discardButtonClickListener =
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -243,8 +222,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
         return super.onOptionsItemSelected(item);
     }
 
-    private void showUnsavedChangesDialog(
-            DialogInterface.OnClickListener discardButtonClickListener) {
+    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -266,8 +244,24 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // TODO: onSharedPreferenceChanged
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) { }
+
+    @Override
+    public void onBackPressed() {
+        // If the partner hasn't changed, continue with handling back button press
+        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        // Create a click listener to handle the user confirming that changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+
+        // Show dialog that there are unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
     }
 
     @Override

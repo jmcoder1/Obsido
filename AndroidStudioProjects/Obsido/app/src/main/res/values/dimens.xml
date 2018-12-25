@@ -1,0 +1,14 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_activity_margin">16dp</dimen>
+    <dimen name="nav_header_height">120dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Dimensions for the partner list item profile image -->
+    <dimen name="partner_profile_img_width">64dp</dimen>
+    <dimen name="partner_profile_img_height">64dp</dimen>
+    <dimen name="partner_profile_img_marginRight">16dp</dimen>
+</resources>
