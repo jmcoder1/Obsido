@@ -316,10 +316,10 @@ public class CalendarActivity extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_theme_key))) {
-            loadThemeFromPreferences();
-            Intent intent = new Intent(this, CalendarActivity.class);
-            startActivity(intent);
-            finish();
+            Intent openCalendarIntent = new Intent(this, CalendarActivity.class);
+            startActivity(openCalendarIntent);
+            recreate();
+            
         }
     }
 

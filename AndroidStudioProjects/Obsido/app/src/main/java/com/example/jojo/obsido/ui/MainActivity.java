@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements
         initDrawer();
 
         if(savedInstanceState == null) {
+            Toast.makeText(this, "Not nulll", Toast.LENGTH_LONG).show();
+
             Log.v(LOG_TAG, "onCreate: savedInstanceState == null; open the overview activity");
             Intent overviewIntent = new Intent(this, OverviewActivity.class);
             startActivity(overviewIntent);
@@ -190,10 +193,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_theme_key))) {
-            loadThemeFromPreferences();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
         }
     }
 

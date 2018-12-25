@@ -182,10 +182,7 @@ public class OverviewActivity extends AppCompatActivity implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_theme_key))) {
             // TODO: Should restart application and activity
-            loadThemeFromPreferences();
-            Intent intent = new Intent(this, OverviewActivity.class);
-            startActivity(intent);
-            finish();
+
         }
     }
 

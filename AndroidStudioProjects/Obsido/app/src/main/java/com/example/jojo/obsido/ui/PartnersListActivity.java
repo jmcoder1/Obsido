@@ -200,10 +200,8 @@ public class PartnersListActivity extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_theme_key))) {
-            loadThemeFromPreferences();
             Intent intent = new Intent(this, PartnersListActivity.class);
             startActivity(intent);
-            finish();
         }
     }
 

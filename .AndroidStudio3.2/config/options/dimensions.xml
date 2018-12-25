@@ -3,8 +3,8 @@
     <location key="#HTTP_Proxy.0.0.1366.768" x="471" y="136" />
     <location key="WELCOME_SCREEN.0.0.1366.768" x="683" y="300" />
     <location key="FileChooserDialogImpl.0.0.1366.768" x="810" y="120" />
-    <location key="deploy.picker.dialog.0.0.1366.768" x="624" y="120" />
-    <location key="ProcessPopupWindow.0.0.1366.768" x="383" y="544" />
+    <location key="deploy.picker.dialog.0.0.1366.768" x="582" y="101" />
+    <location key="ProcessPopupWindow.0.0.1366.768" x="964" y="560" />
     <location key="com.intellij.ide.util.TipDialog.0.0.1366.768" x="730" y="190" />
     <location key="DiffContextDialog.0.0.1366.768" x="258" y="58" />
     <location key="CommitChangelistDialog2.0.0.1366.768" x="630" y="9" />
@@ -14,7 +14,7 @@
     <location key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog.0.0.1366.768" x="122" y="112" />
     <location key="#com.intellij.ide.util.MemberChooser.0.0.1366.768" x="835" y="71" />
     <location key="#com.intellij.refactoring.rename.AutomaticRenamingDialog.0.0.1366.768" x="283" y="0" />
-    <location key="find.popup.0.0.1366.768" x="775" y="99" />
+    <location key="find.popup.0.0.1366.768" x="765" y="89" />
     <location key="Github.ShareDialog.0.0.1366.768" x="475" y="241" />
     <location key="Vcs.Push.Dialog.0.0.1366.768" x="359" y="97" />
     <location key="GitCloneDialog.0.0.1366.768" x="531" y="291" />
@@ -24,12 +24,12 @@
     <location key="Github.CreatePullRequestDialog.0.0.1366.768" x="491" y="241" />
     <location key="VCS.ChangeListViewerDialog.0.0.1366.768" x="452" y="73" />
     <size key="ProcessPopupWindow.0.0.1366.768" width="400" height="190" />
-    <size key="GridCell.Tab.0.left.0.0.1366.768" width="1322" height="175" />
-    <size key="GridCell.Tab.0.center.0.0.1366.768" width="1322" height="175" />
-    <size key="GridCell.Tab.0.right.0.0.1366.768" width="1322" height="175" />
-    <size key="GridCell.Tab.0.bottom.0.0.1366.768" width="1322" height="175" />
+    <size key="GridCell.Tab.0.left.0.0.1366.768" width="0" height="0" />
+    <size key="GridCell.Tab.0.center.0.0.1366.768" width="0" height="0" />
+    <size key="GridCell.Tab.0.right.0.0.1366.768" width="0" height="0" />
+    <size key="GridCell.Tab.0.bottom.0.0.1366.768" width="0" height="0" />
     <size key="CommitChangelistDialog2.0.0.1366.768" width="672" height="719" />
-    <size key="find.popup.0.0.1366.768" width="591" height="629" />
+    <size key="find.popup.0.0.1366.768" width="601" height="639" />
     <size key="GitCloneDialog.0.0.1366.768" width="596" height="209" />
     <size key="GridCell.Tab.1.left.0.0.1366.768" width="1322" height="218" />
     <size key="GridCell.Tab.1.center.0.0.1366.768" width="1322" height="218" />
