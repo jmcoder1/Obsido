@@ -71,4 +71,7 @@
     <string name="stepper_add_partner_next_button">Next</string>
     <string name="stepper_add_partner_last_button">Done</string>
 
+    <!-- Strings for new toast messages -->
+    <string name="shared_preferences_theme_changed">Applying changes</string>
+
 </resources>

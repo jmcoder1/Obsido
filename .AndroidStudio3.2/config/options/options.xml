@@ -28,12 +28,12 @@
     <property name="AndroidInitConfigurator.V1" value="true" />
     <property name="AndroidInitConfigurator.V3" value="true" />
     <property name="AndroidInitConfigurator.V5" value="true" />
-    <property name="CommitChangeListDialog.DETAILS_SPLITTER_PROPORTION_2" value="0.5346535" />
+    <property name="CommitChangeListDialog.DETAILS_SPLITTER_PROPORTION_2" value="0.5594059" />
     <property name="Copy.OpenInEditor" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MobileminApi" value="19" />
-    <property name="android-component-compatibility-check" value="1545142728831" />
+    <property name="android-component-compatibility-check" value="1545778779727" />
     <property name="build.toolwindow.Build.selection.state" value="com.intellij.build.BuildTreeConsoleView" />
     <property name="build.toolwindow.Sync.selection.state" value="com.intellij.build.BuildTreeConsoleView" />
     <property name="file.chooser.recent.files" value="$USER_HOME$/AndroidStudioProjects/Sudo&#10;C:/Users/Jojo/AndroidStudioProjects/Poett&#10;C:/Users/Jojo/AndroidStudioProjects&#10;C:/Users/Jojo/AndroidStudioProjects/VerticalStepperForm-master/VerticalStepperForm-master/vertical-stepper-form&#10;C:/Users/Jojo/AndroidStudioProjects/Sudo/app" />

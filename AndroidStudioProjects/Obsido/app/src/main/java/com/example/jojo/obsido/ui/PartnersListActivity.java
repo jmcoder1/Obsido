@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.jojo.obsido.PartnerCursorAdapter;
 import com.example.jojo.obsido.SettingsActivity;
@@ -77,38 +78,44 @@ public class PartnersListActivity extends AppCompatActivity implements
 
         Log.v(LOG_TAG, "loadThemeFromPreferences: load theme from preferences.");
 
-        if(sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
-            setTheme(R.style.AppThemeRed);
+        if(sharedPreferenceTheme != null) {
+            try {
+                if (sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
+                    setTheme(R.style.AppThemeRed);
 
-            if(mHeaderView != null) {
-                mHeaderView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    if (mHeaderView != null) {
+                        mHeaderView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    }
+
+                    Log.v(LOG_TAG, "RED theme from Shared Preferences.");
+                } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
+                    setTheme(R.style.AppThemeBlue);
+
+                    if (mHeaderView != null) {
+                        mHeaderView.setBackgroundResource(R.color.colorPrimaryBlue);
+                    }
+
+                    Log.v(LOG_TAG, "BLUE theme from Shared Preferences.");
+                } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
+                    setTheme(R.style.AppThemeGreen);
+
+                    if (mHeaderView != null) {
+                        mHeaderView.setBackgroundResource(R.color.colorPrimaryGreen);
+                    }
+
+                    Log.v(LOG_TAG, "GREEN theme from Shared Preferences.");
+                } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
+                    setTheme(R.style.AppThemePink);
+
+                    if (mHeaderView != null) {
+                        mHeaderView.setBackgroundResource(R.color.colorPrimaryPink);
+                    }
+
+                    Log.v(LOG_TAG, "PINK theme from Shared Preferences.");
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
             }
-
-            Log.v(LOG_TAG, "RED theme from Shared Preferences.");
-        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
-            setTheme(R.style.AppThemeBlue);
-
-            if(mHeaderView != null) {
-                mHeaderView.setBackgroundResource(R.color.colorPrimaryBlue);
-            }
-
-            Log.v(LOG_TAG, "BLUE theme from Shared Preferences.");
-        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
-            setTheme(R.style.AppThemeGreen);
-
-            if(mHeaderView != null) {
-                mHeaderView.setBackgroundResource(R.color.colorPrimaryGreen);
-            }
-
-            Log.v(LOG_TAG, "GREEN theme from Shared Preferences.");
-        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
-            setTheme(R.style.AppThemePink);
-
-            if(mHeaderView != null) {
-                mHeaderView.setBackgroundResource(R.color.colorPrimaryPink);
-            }
-
-            Log.v(LOG_TAG, "PINK theme from Shared Preferences.");
         }
     }
 
@@ -148,22 +155,28 @@ public class PartnersListActivity extends AppCompatActivity implements
 
         Log.v(LOG_TAG, "loadThemeFromPreferences: load theme from preferences.");
 
-        if(sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
-            mFab.setBackgroundTintList(getResources().getColorStateList(R.color.colorRedAccent));
+        if(sharedPreferenceTheme != null) {
+            try {
+                if (sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
+                    mFab.setBackgroundTintList(getResources().getColorStateList(R.color.colorRedAccent));
 
-            Log.v(LOG_TAG, "loadThemeFromPreferences: RED themes from Shared Preferences.");
-        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
-            mFab.setBackgroundTintList(getResources().getColorStateList(R.color.colorBlueAccent));
+                    Log.v(LOG_TAG, "loadThemeFromPreferences: RED themes from Shared Preferences.");
+                } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
+                    mFab.setBackgroundTintList(getResources().getColorStateList(R.color.colorBlueAccent));
 
-            Log.v(LOG_TAG, "BLUE themes from Shared Preferences.");
-        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
-            mFab.setBackgroundTintList(getResources().getColorStateList(R.color.colorGreenAccent));
+                    Log.v(LOG_TAG, "BLUE themes from Shared Preferences.");
+                } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
+                    mFab.setBackgroundTintList(getResources().getColorStateList(R.color.colorGreenAccent));
 
-            Log.v(LOG_TAG, "loadThemeFromPreferences: GREEN themes from Shared Preferences.");
-        } else if(sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
-            mFab.setBackgroundTintList(getResources().getColorStateList(R.color.colorPinkAccent));
+                    Log.v(LOG_TAG, "loadThemeFromPreferences: GREEN themes from Shared Preferences.");
+                } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
+                    mFab.setBackgroundTintList(getResources().getColorStateList(R.color.colorPinkAccent));
 
-            Log.v(LOG_TAG, "loadThemeFromPreferences: PINK themes from Shared Preferences.");
+                    Log.v(LOG_TAG, "loadThemeFromPreferences: PINK themes from Shared Preferences.");
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -200,8 +213,17 @@ public class PartnersListActivity extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_theme_key))) {
-            Intent intent = new Intent(this, PartnersListActivity.class);
-            startActivity(intent);
+            try {
+                Intent i = getBaseContext().getPackageManager()
+                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                Toast.makeText(this, R.string.shared_preferences_theme_changed, Toast.LENGTH_SHORT).show();
+
+                startActivity(i);
+            } catch(NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 

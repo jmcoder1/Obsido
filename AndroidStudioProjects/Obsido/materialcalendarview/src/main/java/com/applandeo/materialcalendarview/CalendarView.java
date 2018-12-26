@@ -81,12 +81,10 @@ public class CalendarView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.calendar_view, this);
 
-        mViewPager = (CalendarViewPager) findViewById(R.id.calendarViewPager);
+        mViewPager = findViewById(R.id.calendarViewPager);
 
         initAttributes();
         initCalendar();
-
-
     }
 
     private void initControl(Context context, AttributeSet attrs) {
@@ -96,7 +94,7 @@ public class CalendarView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.calendar_view, this);
 
-        mViewPager = (CalendarViewPager) findViewById(R.id.calendarViewPager);
+        mViewPager = findViewById(R.id.calendarViewPager);
 
         setAttributes(attrs);
     }
@@ -209,7 +207,7 @@ public class CalendarView extends LinearLayout {
         mCalendarProperties.getFirstPageCalendarDate().setTime(calendar.getTime());
         mCalendarProperties.getFirstPageCalendarDate().add(Calendar.MONTH, -FIRST_VISIBLE_PAGE);
 
-        mViewPager.setCurrentItem(FIRST_VISIBLE_PAGE);
+        mViewPager.setCurrentItem(FIRST_VISIBLE_PAGE, true);
     }
 
     public void setOnPreviousPageChangeListener(OnCalendarPageChangeListener listener) {
