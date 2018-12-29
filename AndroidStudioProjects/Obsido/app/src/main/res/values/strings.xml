@@ -65,6 +65,11 @@
     <string name="stepper_add_partner_name" translatable="true">Name</string>
     <string name="stepper_add_partner_description" translatable="true">Description</string>
     <string name="stepper_add_partner_gender" translatable="true">Gender</string>
+
+        <string name="stepper_add_partner_gender_male" translatable="true">Male</string>
+        <string name="stepper_add_partner_gender_female" translatable="true">Female</string>
+
+
     <string name="stepper_add_partner_age" translatable="true">Age</string>
 
     <!-- Strings for the Vertical Stepper to move onto the next step -->
@@ -73,5 +78,11 @@
 
     <!-- Strings for new toast messages -->
     <string name="shared_preferences_theme_changed">Applying changes</string>
+
+    <!-- Strings for the title of the Stepper activity toa dd the partner [CHAR LIMIT = 20] -->
+    <string name="stepper_add_partner" translatable="true">Add a partner</string>
+    <string name="stepper_edit_partner" translatable="true">Edit</string>
+
+
 
 </resources>

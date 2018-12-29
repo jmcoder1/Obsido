@@ -3,7 +3,6 @@ package com.applandeo.materialcalendarview.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import androidx.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.annimon.stream.Stream;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.R;
-import com.applandeo.materialcalendarview.utils.AppearanceUtils;
 import com.applandeo.materialcalendarview.utils.CalendarProperties;
 import com.applandeo.materialcalendarview.utils.DateUtils;
 import com.applandeo.materialcalendarview.utils.DayColorsUtils;
@@ -33,7 +31,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
     private LayoutInflater mLayoutInflater;
     private CalendarProperties mCalendarProperties;
 
-    private Calendar mToday = DateUtils.getCalendar();
     private int mPageMonth;
 
     private List<TextView> mEventDayTextView = new ArrayList<>();
@@ -47,6 +44,8 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
         mCalendarProperties = calendarProperties;
         mPageMonth = pageMonth < 0 ? 11 : pageMonth;
         mLayoutInflater = LayoutInflater.from(context);
+
+        DayColorsUtils.setDaysBackgroundColor(getContext().getResources(), mCalendarProperties);
     }
 
     @NonNull
@@ -61,7 +60,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
         ImageView dayIcon = view.findViewById(R.id.dayIcon);
 
         setDayClickedListener(dayParent, dayLabel, dayIcon);
-        setSelectorColors();
         Calendar day = new GregorianCalendar();
         day.setTime(getItem(position));
 
@@ -78,9 +76,9 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
     }
 
     private void setLabelColors(TextView dayTextView, View dayIcon, View dayParent, Calendar day) {
-        // Settings color for days not in the current month
+        // Attributes for the days not in the current month
         if (!isCurrentMonthDay(day)) {
-            DayColorsUtils.setDayColors(dayTextView, mCalendarProperties.getAnotherMonthsDaysLabelsColor(),
+            DayColorsUtils.setDayColors(dayTextView, dayParent, mCalendarProperties.getAnotherMonthsDaysLabelsColor(),
                     Typeface.NORMAL, R.drawable.background_transparent);
             dayTextView.setClickable(false);
             dayIcon.setClickable(false);
@@ -88,38 +86,27 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
             return;
         }
 
-        // Settings for selected days in the month
+        // Attributes for selected days in the month
         if (isSelectedDay(day)) {
             Stream.of(mCalendarPageAdapter.getSelectedDays())
                     .filter(selectedDay -> selectedDay.getCalendar().equals(day))
                     .findFirst().ifPresent(selectedDay -> selectedDay.setView(dayTextView));
 
-            DayColorsUtils.setSelectedDayColors(dayTextView, mCalendarProperties);
+            DayColorsUtils.setSelectedDayColors(dayTextView, dayParent, mCalendarProperties);
             return;
         }
 
-        if(day.equals(mToday)) {
-            Log.v(LOG_TAG, "Calendar day today " + Calendar.DAY_OF_WEEK);
+        Calendar today = DateUtils.getCalendar();
+
+        if(day.equals(today)) {
             mEventDayTextView.add(dayTextView);
-            dayParent.setBackgroundResource(R.drawable.selected_today_day_bg);
         } else if(isEventDay(day)) {
-            Log.v(LOG_TAG, "Calendar event day " + Calendar.DAY_OF_WEEK);
             mEventDayTextView.add(dayTextView);
-            dayParent.setBackgroundResource(R.drawable.selected_event_day_bg);
-        } else {
-            dayParent.setBackgroundResource(R.drawable.selected_day_bg);
         }
 
-        DayColorsUtils.setCurrentMonthDayColors(day, mToday, dayTextView, mCalendarProperties);
+        DayColorsUtils.setCurrentMonthDayColors(day, today, dayTextView, dayParent, mCalendarProperties);
     }
 
-    private void setSelectorColors() {
-        AppearanceUtils.setSelectionColor(getContext().getResources(), mCalendarProperties.getSelectionColor());
-
-        AppearanceUtils.setEventSelectionColor(getContext().getResources(), mCalendarProperties.getEventDayColor());
-
-        AppearanceUtils.setTodaySelectionColor(getContext().getResources(), mCalendarProperties.getTodayColor());
-    }
 
     private boolean isSelectedDay(Calendar day) {
         return mCalendarProperties.getCalendarType() != CalendarView.CLASSIC && day.get(Calendar.MONTH)
@@ -134,7 +121,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
 
     private boolean isEventDay(Calendar day) {
         return mCalendarProperties.getEventCalendarDays().contains(day);
-
     }
 
     private boolean isActiveDay(Calendar day) {
@@ -150,7 +136,7 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
         Stream.of(mCalendarProperties.getEventDays()).filter(eventDate ->
                 eventDate.getCalendar().equals(day)).findFirst().executeIfPresent(eventDay -> {
 
-            ImageUtils.loadImage(dayIcon, eventDay.getImageDrawable());
+            ImageUtils.loadImage(dayIcon, eventDay.getImageDrawable(), mCalendarProperties);
 
             // If a day doesn't belong to current month then image is transparent
             if (!isCurrentMonthDay(day) || !isActiveDay(day)) {
@@ -175,7 +161,7 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
                 // Handle clicks on event days so they do not lose their previous styling after being pressed
                 // Handle clicks on non event days so they retain their default styling after being pressed
                 if(!(mEventDayTextView.contains(dayTextView))) {
-                    dayTextView.setTextColor(mCalendarProperties.getSelectionColor());
+                    dayTextView.setTextColor(mCalendarProperties.getSelectedDayColor());
                 }
 
                 if(mLastClickedDayParentView != null && mLastClickedDayTextView != null) {

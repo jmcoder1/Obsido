@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <declare-styleable name="CalendarView">
-        <attr name="todayColor" format="color" />
-        <attr name="selectionColor" format="color" />
+        <attr name="todayDayColor" format="color" />
+        <attr name="selectedDayColor" format="color" />
         <attr name="weekDayBarColor" format="color" />
         <attr name="weekDayLabelColor" format="color" />
         <attr name="eventDayColor" format="color" />
-
+        <attr name="eventIconColor" format="color" />
 
 
         <attr name="disabledDaysLabelsColor" format="color" />

@@ -3,6 +3,7 @@ package com.example.jojo.obsido.ui;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.form.steps.PartnerAgeStep;
 import com.example.jojo.obsido.form.steps.PartnerDescriptionStep;
+import com.example.jojo.obsido.form.steps.PartnerGenderStep;
 import com.example.jojo.obsido.form.steps.PartnerNameStep;
 
 import androidx.appcompat.app.AlertDialog;
@@ -29,7 +31,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
 
     private PartnerNameStep mPartnerNameStep;
     private PartnerDescriptionStep mPartnerDescriptionStep;
-    // TODO: initialise - private PartnerGenderStep mPartnerGenderStep;
+    private PartnerGenderStep mPartnerGenderStep;
     private PartnerAgeStep mPartnerAgeStep;
 
     // UI XML Views
@@ -47,15 +49,28 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
         initToolbar();
 
         mPartnerNameStep = new PartnerNameStep(getResources()
-                .getString(R.string.stepper_add_partner_name));
+                .getString(R.string.stepper_add_partner_name), getApplicationContext());
         mPartnerDescriptionStep = new PartnerDescriptionStep(getResources()
-                .getString(R.string.stepper_add_partner_description));
+                .getString(R.string.stepper_add_partner_description), getApplicationContext());
         mPartnerAgeStep = new PartnerAgeStep(getResources()
                 .getString(R.string.stepper_add_partner_age));
+        mPartnerGenderStep = new PartnerGenderStep(getResources()
+                .getString(R.string.stepper_add_partner_gender));
+
 
         verticalStepperForm = findViewById(R.id.stepper_form);
 
         loadVerticalStepperSharedPreferences(mSharedPreferences);
+
+        // TODO: Change this when data syncing is updated to ( SQL --> Firebase && Firebase --> SQL)
+        Intent intent = getIntent();
+        Uri partnerUri = intent.getData();
+
+        if(partnerUri == null) {
+            setTitle(R.string.stepper_add_partner);
+        } else {
+            setTitle(R .string.stepper_edit_partner);
+        }
     }
 
     private void setUpSharedPreference() {
@@ -124,7 +139,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             try {
                 if (sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
                     verticalStepperForm
-                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
+                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
                             .stepNumberColors(getResources().getColor(R.color.colorPrimaryRed),
                                     getResources().getColor(R.color.verticalStepperTextColor))
                             .nextButtonColors(getResources().getColor(R.color.colorPrimaryRed),
@@ -138,10 +153,12 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
                     mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryRed));
                     mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryRed));
 
+                    mPartnerGenderStep.setPrimaryColor(getResources().getColor(R.color.colorPrimaryRed));
+
                     Log.v(LOG_TAG, "RED theme from Shared Preferences.");
                 } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
                     verticalStepperForm
-                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
+                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
                             .stepNumberColors(getResources().getColor(R.color.colorPrimaryBlue),
                                     getResources().getColor(R.color.verticalStepperTextColor))
                             .nextButtonColors(getResources().getColor(R.color.colorPrimaryBlue),
@@ -154,10 +171,13 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
                     mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryBlue));
                     mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryBlue));
 
+                    mPartnerGenderStep.setPrimaryColor(getResources().getColor(R.color.colorPrimaryBlue));
+
+
                     Log.v(LOG_TAG, "BLUE theme from Shared Preferences.");
                 } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
                     verticalStepperForm
-                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
+                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
                             .stepNumberColors(getResources().getColor(R.color.colorPrimaryGreen),
                                     getResources().getColor(R.color.verticalStepperTextColor))
                             .nextButtonColors(getResources().getColor(R.color.colorPrimaryGreen),
@@ -170,10 +190,13 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
                     mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryGreen));
                     mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryGreen));
 
+                    mPartnerGenderStep.setPrimaryColor(getResources().getColor(R.color.colorPrimaryGreen));
+
+
                     Log.v(LOG_TAG, "GREEN theme from Shared Preferences.");
                 } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
                     verticalStepperForm
-                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep)
+                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
                             .stepNumberColors(getResources().getColor(R.color.colorPrimaryPink),
                                     getResources().getColor(R.color.verticalStepperTextColor))
                             .nextButtonColors(getResources().getColor(R.color.colorPrimaryPink),
@@ -185,6 +208,9 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
 
                     mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryPink));
                     mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryPink));
+
+                    mPartnerGenderStep.setPrimaryColor(getResources().getColor(R.color.colorPrimaryPink));
+
 
                     Log.v(LOG_TAG, "PINK theme from Shared Preferences.");
                 }

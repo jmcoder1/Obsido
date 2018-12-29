@@ -65,6 +65,7 @@ public class CalendarActivity extends AppCompatActivity implements
         initEvents();
 
         loadFabColorFromPreferences();
+        loadThemeFromPreferences();
     }
 
     private void setUpSharedPreference() {
@@ -92,6 +93,7 @@ public class CalendarActivity extends AppCompatActivity implements
                         mCalendarView.setEventDayColor(getResources().getColor(R.color.colorPrimaryRed));
                         mCalendarView.setWeekDayBarColor(getResources().getColor(R.color.colorPrimaryRed));
                         mCalendarView.setTodayColor(getResources().getColor(R.color.colorRedAccent));
+                        mCalendarView.setEventIconColor(getResources().getColor(R.color.colorPrimaryRedDark));
                     }
 
                     Log.v(LOG_TAG, "RED theme from Shared Preferences.");
@@ -107,22 +109,24 @@ public class CalendarActivity extends AppCompatActivity implements
                         mCalendarView.setEventDayColor(getResources().getColor(R.color.colorPrimaryBlue));
                         mCalendarView.setWeekDayBarColor(getResources().getColor(R.color.colorPrimaryBlue));
                         mCalendarView.setTodayColor(getResources().getColor(R.color.colorBlueAccent));
+                        mCalendarView.setEventIconColor(getResources().getColor(R.color.colorPrimaryBlueDark));
                     }
 
                     Log.v(LOG_TAG, "BLUE theme from Shared Preferences.");
                 } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
                     setTheme(R.style.AppThemeGreen);
 
+
                     if (mHeaderView != null) {
                         mHeaderView.setBackgroundResource(R.color.colorPrimaryGreen);
                     }
-
 
                     if (mCalendarView != null) {
                         mCalendarView.setSelectionColor(getResources().getColor(R.color.colorPrimaryGreen));
                         mCalendarView.setEventDayColor(getResources().getColor(R.color.colorPrimaryGreen));
                         mCalendarView.setWeekDayBarColor(getResources().getColor(R.color.colorPrimaryGreen));
                         mCalendarView.setTodayColor(getResources().getColor(R.color.colorGreenAccent));
+                        mCalendarView.setEventIconColor(getResources().getColor(R.color.colorPrimaryGreenDark));
                     }
 
 
@@ -139,6 +143,8 @@ public class CalendarActivity extends AppCompatActivity implements
                         mCalendarView.setEventDayColor(getResources().getColor(R.color.colorPrimaryPink));
                         mCalendarView.setWeekDayBarColor(getResources().getColor(R.color.colorPrimaryPink));
                         mCalendarView.setTodayColor(getResources().getColor(R.color.colorPinkAccent));
+                        mCalendarView.setEventIconColor(getResources().getColor(R.color.colorPrimaryPinkDark));
+
                     }
 
                     Log.v(LOG_TAG, "PINK theme from Shared Preferences.");
@@ -160,7 +166,6 @@ public class CalendarActivity extends AppCompatActivity implements
                 e.printStackTrace();
             }
         }
-
     }
 
     private void initFab() {
@@ -228,7 +233,6 @@ public class CalendarActivity extends AppCompatActivity implements
         calendar2.set(Calendar.DAY_OF_MONTH, 16);
 
         Drawable draw = getResources().getDrawable(R.drawable.test_event);
-        draw.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
 
         mEventDays.add(new EventDay(calendar1, draw));
         mEventDays.add(new EventDay(calendar2, draw));
@@ -329,7 +333,7 @@ public class CalendarActivity extends AppCompatActivity implements
         if (key.equals(getString(R.string.pref_theme_key))) {
             try {
                 Intent i = getBaseContext().getPackageManager()
-                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                        .getLaunchIntentForPackage(getBaseContext().getPackageName() );
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 Toast.makeText(this, R.string.shared_preferences_theme_changed, Toast.LENGTH_SHORT).show();

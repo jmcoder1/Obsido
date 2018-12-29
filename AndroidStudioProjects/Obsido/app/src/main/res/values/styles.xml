@@ -41,5 +41,7 @@
 
     </style>
 
-
+    <style name="titleTextStyle" parent="@style/Base.TextAppearance.AppCompat.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>

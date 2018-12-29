@@ -28,8 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_love_heart" />
-                            <entry key="sourceFile" value="C:\Users\Jojo" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_gender_male" />
+                            <entry key="sourceFile" value="C:\Users\Jojo\Downloads\masculine.svg" />
                           </map>
                         </option>
                       </PersistentState>

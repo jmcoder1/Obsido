@@ -14,6 +14,8 @@ import java.util.List;
 
 public final class AppearanceUtils {
 
+    private AppearanceUtils() { }
+
     public static void setWeekDayLabels(View view, int color, int firstDayOfWeek) {
 
         List<TextView> labels = new ArrayList<>();
@@ -36,33 +38,6 @@ public final class AppearanceUtils {
         }
     }
 
-
-    public static void setSelectionColor(Resources res, int color) {
-        if(color == 0) {
-            return;
-        }
-        Drawable draw = res.getDrawable(R.drawable.selected_day_bg_shape);
-        DrawableCompat.setTint(draw, color);
-
-    }
-
-    public static void setEventSelectionColor(Resources res, int color) {
-        if(color == 0) {
-            return;
-        }
-        Drawable draw = res.getDrawable(R.drawable.selected_event_day_bg_shape);
-        DrawableCompat.setTint(draw, color);
-
-    }
-    public static void setTodaySelectionColor(Resources res, int color) {
-        if(color == 0) {
-            return;
-        }
-        Drawable draw = res.getDrawable(R.drawable.selected_today_day_bg_shape);
-        DrawableCompat.setTint(draw, color);
-
-    }
-
     public static void setWeekDayBarColor(View view, int color) {
         if (color == 0) {
             return;
@@ -79,7 +54,6 @@ public final class AppearanceUtils {
         view.findViewById(R.id.calendarViewPager).setBackgroundColor(color);
     }
 
-    private AppearanceUtils() {
-    }
+
 
 }

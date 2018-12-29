@@ -20,6 +20,8 @@ import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 import com.applandeo.materialcalendarview.utils.AppearanceUtils;
 import com.applandeo.materialcalendarview.utils.CalendarProperties;
 import com.applandeo.materialcalendarview.utils.DateUtils;
+import com.applandeo.materialcalendarview.utils.DayColorsUtils;
+import com.applandeo.materialcalendarview.utils.ImageUtils;
 import com.applandeo.materialcalendarview.utils.SelectedDay;
 
 import java.util.ArrayList;
@@ -126,14 +128,17 @@ public class CalendarView extends LinearLayout {
         int anotherMonthsDaysLabelsColor = typedArray.getColor(R.styleable.CalendarView_anotherMonthsDaysLabelsColor, 0);
         mCalendarProperties.setAnotherMonthsDaysLabelsColor(anotherMonthsDaysLabelsColor);
 
-        int selectionColor = typedArray.getColor(R.styleable.CalendarView_selectionColor, 0);
-        mCalendarProperties.setSelectionColor(selectionColor);
+        int selectedDayColor = typedArray.getColor(R.styleable.CalendarView_selectedDayColor, 0);
+        mCalendarProperties.setSelectedDayColor(selectedDayColor);
 
-        int todayColor = typedArray.getColor(R.styleable.CalendarView_todayColor, 0);
-        mCalendarProperties.setTodayColor(todayColor);
+        int todayDayColor = typedArray.getColor(R.styleable.CalendarView_todayDayColor, 0);
+        mCalendarProperties.setTodayDayColor(todayDayColor);
 
         int eventDayColor = typedArray.getColor(R.styleable.CalendarView_eventDayColor, 0);
         mCalendarProperties.setEventDayColor(eventDayColor);
+
+        int eventIconColor = typedArray.getColor(R.styleable.CalendarView_eventIconColor, 0);
+        mCalendarProperties.setEventDayColor(eventIconColor);
 
         int disabledDaysLabelsColor = typedArray.getColor(R.styleable.CalendarView_disabledDaysLabelsColor, 0);
         mCalendarProperties.setDisabledDaysLabelsColor(disabledDaysLabelsColor);
@@ -155,11 +160,7 @@ public class CalendarView extends LinearLayout {
 
         AppearanceUtils.setPagesColor(getRootView(), mCalendarProperties.getPagesColor());
 
-        AppearanceUtils.setSelectionColor(getResources(), mCalendarProperties.getSelectionColor());
-
-        AppearanceUtils.setEventSelectionColor(getResources(), mCalendarProperties.getEventDayColor());
-
-        AppearanceUtils.setTodaySelectionColor(getResources(), mCalendarProperties.getTodayColor());
+        DayColorsUtils.setDaysBackgroundColor(getResources(), mCalendarProperties);
 
         // Sets layout for date picker or normal calendar
         setCalendarRowLayout();
@@ -383,35 +384,42 @@ public class CalendarView extends LinearLayout {
     }
 
     public void setSelectionColor(int color) {
-        mCalendarProperties.setSelectionColor(color);
-        AppearanceUtils.setSelectionColor(getResources(), mCalendarProperties.getSelectionColor());
+        mCalendarProperties.setSelectedDayColor(color);
+        DayColorsUtils.setSelectedDayColors(getResources(), mCalendarProperties);
     }
 
     public int getSelectionColor() {
-        return mCalendarProperties.getSelectionColor();
+        return mCalendarProperties.getSelectedDayColor();
     }
 
     public void setTodayColor(int color) {
-        mCalendarProperties.setTodayColor(color);
-        AppearanceUtils.setEventSelectionColor(getResources(), mCalendarProperties.getTodayColor());
+        mCalendarProperties.setTodayDayColor(color);
+        DayColorsUtils.setTodayDayColor(getResources(), mCalendarProperties);
     }
 
-    public int getTodayColor() {
-        return mCalendarProperties.getTodayColor();
+    public int getTodayDayColor() {
+        return mCalendarProperties.getTodayDayColor();
     }
 
     public void setEventDayColor(int color) {
         mCalendarProperties.setEventDayColor(color);
-        AppearanceUtils.setEventSelectionColor(getResources(), mCalendarProperties.getEventDayColor());
+        DayColorsUtils.setEventDayColor(getResources(), mCalendarProperties);
     }
 
     public int getEventDayColor() {
         return mCalendarProperties.getEventDayColor();
     }
 
+    public void setEventIconColor(int color) {
+        mCalendarProperties.setEventIconColor(color);
+        ImageUtils.setEventIconColor(mCalendarProperties);
+    }
+
+    public int getEventIconColor() { return mCalendarProperties.getEventIconColor(); }
+
     public void setWeekDayBarColor(int color) {
         mCalendarProperties.setWeekDayBarColor(color);
-        AppearanceUtils.setWeekDayBarColor(getRootView(), mCalendarProperties.getWeekDayBarColor());
+        AppearanceUtils.setWeekDayBarColor(getRootView(), color);
     }
 
     public int getWeekDayBarColor() {

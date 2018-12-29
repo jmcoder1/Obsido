@@ -1,8 +1,10 @@
 package com.example.jojo.obsido.form.steps;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import ernestoyaquello.com.verticalstepperform.Step;
@@ -10,8 +12,17 @@ import ernestoyaquello.com.verticalstepperform.Step;
 public class PartnerNameStep extends Step<String> {
 
     private EditText partnerNameView;
+
+    private Context mContext;
+    private InputMethodManager im;
+
     public PartnerNameStep(String stepTitle) {
         super(stepTitle);
+    }
+
+    public PartnerNameStep(String stepTitle, Context context) {
+        super(stepTitle);
+        mContext = context;
     }
 
     @Override
@@ -19,6 +30,12 @@ public class PartnerNameStep extends Step<String> {
         // Here we generate the view that will be used by the library as the content of the step.
         // In this case we do it programmatically, but we could also do it by inflating an XML layout.
         partnerNameView = new EditText(getContext());
+
+        if(mContext != null) {
+            im = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        }
+
         partnerNameView.setSingleLine(true);
         partnerNameView.setHint("Name");
 
@@ -77,6 +94,11 @@ public class PartnerNameStep extends Step<String> {
     @Override
     protected void onStepClosed(boolean animated) {
         // This will be called automatically whenever the step gets closed.
+
+        // This closes the soft keyboard
+        if(im != null && mContext != null) {
+            im.hideSoftInputFromWindow(partnerNameView.getWindowToken(), 0);
+        }
     }
 
     @Override

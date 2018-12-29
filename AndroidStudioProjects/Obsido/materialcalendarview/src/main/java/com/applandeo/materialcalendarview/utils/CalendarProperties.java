@@ -34,9 +34,9 @@ public class CalendarProperties {
     public static final int CALENDAR_SIZE = 2401;
     public static final int FIRST_VISIBLE_PAGE = CALENDAR_SIZE / 2;
 
-    private int mCalendarType, mSelectionColor, mTodayColor, mEventDayColor, mItemLayoutResource,
-            mDisabledDaysLabelsColor, mPagesColor, mWeekDayBarColor, mWeekDayLabelColor,
-            mToolbarColor, mDaysLabelsColor, mAnotherMonthsDaysLabelsColor;
+    private int mCalendarType, mSelectedDayColor, mTodayDayColor, mEventDayColor, mEventIconColor,
+            mDaysLabelsColor, mDisabledDaysLabelsColor, mPagesColor, mWeekDayBarColor, mToolbarColor,
+            mWeekDayLabelColor, mItemLayoutResource, mAnotherMonthsDaysLabelsColor;
 
     private boolean mEventsEnabled;
 
@@ -107,28 +107,28 @@ public class CalendarProperties {
         mOnSelectDateListener = onSelectDateListener;
     }
 
-    public int getSelectionColor() {
-        if (mSelectionColor == 0) {
+    public int getSelectedDayColor() {
+        if (mSelectedDayColor == 0) {
             return ContextCompat.getColor(mContext, R.color.defaultColor);
         }
 
-        return mSelectionColor;
+        return mSelectedDayColor;
     }
 
-    public void setSelectionColor(int selectionColor) {
-        mSelectionColor = selectionColor;
+    public void setSelectedDayColor(int selectedDayColor) {
+        mSelectedDayColor = selectedDayColor;
     }
 
-    public int getTodayColor() {
-        if (mTodayColor == 0) {
+    public int getTodayDayColor() {
+        if (mTodayDayColor == 0) {
             return ContextCompat.getColor(mContext, R.color.defaultColor);
         }
 
-        return mTodayColor;
+        return mTodayDayColor;
     }
 
-    public void setTodayColor(int todayColor) {
-        mTodayColor = todayColor;
+    public void setTodayDayColor(int todayDayColor) {
+        mTodayDayColor = todayDayColor;
     }
 
     public void setEventDayColor(int eventDayColor) {
@@ -140,6 +140,17 @@ public class CalendarProperties {
             return ContextCompat.getColor(mContext, R.color.defaultColor);
         }
         return mEventDayColor;
+    }
+
+    public void setEventIconColor(int eventIconColor) {
+        mEventIconColor = eventIconColor;
+    }
+
+    public int getEventIconColor() {
+        if (mEventIconColor == 0) {
+            return ContextCompat.getColor(mContext, R.color.defaultColor);
+        }
+        return mEventIconColor;
     }
 
     public Calendar getMinimumDate() {
