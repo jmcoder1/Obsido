@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -29,15 +30,17 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
 
     private static final String LOG_TAG = "EditProfileActivity".getClass().getSimpleName();
 
+    // Vertical Stepper form elements
+    private VerticalStepperFormView verticalStepperForm;
     private PartnerNameStep mPartnerNameStep;
     private PartnerDescriptionStep mPartnerDescriptionStep;
     private PartnerGenderStep mPartnerGenderStep;
     private PartnerAgeStep mPartnerAgeStep;
 
-    // UI XML Views
-    private VerticalStepperFormView verticalStepperForm;
-    private Toolbar mToolbar;
-    private SharedPreferences mSharedPreferences;
+    // Shared Preferences Theme color values
+    private int mColorPrimary;
+    private int mColorPrimaryDark;
+    private int mColorPrimaryAccent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +60,8 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
         mPartnerGenderStep = new PartnerGenderStep(getResources()
                 .getString(R.string.stepper_add_partner_gender));
 
-
         verticalStepperForm = findViewById(R.id.stepper_form);
-
-        loadVerticalStepperSharedPreferences(mSharedPreferences);
+        initVerticalStepper();
 
         // TODO: Change this when data syncing is updated to ( SQL --> Firebase && Firebase --> SQL)
         Intent intent = getIntent();
@@ -74,39 +75,43 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     }
 
     private void setUpSharedPreference() {
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        loadThemeFromPreferences(mSharedPreferences);
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        loadThemeFromPreferences(sharedPreferences);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     private void loadThemeFromPreferences(SharedPreferences sharedPreferences) {
         String sharedPreferenceTheme = sharedPreferences.getString(getString(R.string.pref_theme_key),
                 getString(R.string.pref_show_red_theme_label));
 
-        Log.v(LOG_TAG, "loadThemeFromPreferences: load theme from preferences.");
+        Log.v(LOG_TAG, "loadThemeFromPreferences: called.");
         if(sharedPreferenceTheme != null) {
             try {
                 if (sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
                     setTheme(R.style.AppThemeRed);
-
-                    Log.v(LOG_TAG, "RED theme from Shared Preferences.");
                 } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
                     setTheme(R.style.AppThemeBlue);
-
-                    Log.v(LOG_TAG, "BLUE theme from Shared Preferences.");
                 } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
                     setTheme(R.style.AppThemeGreen);
-
-                    Log.v(LOG_TAG, "GREEN theme from Shared Preferences.");
                 } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
                     setTheme(R.style.AppThemePink);
-
-                    Log.v(LOG_TAG, "PINK theme from Shared Preferences.");
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
+
+        // Gets the values from the activity theme
+        TypedValue typedValue = new TypedValue();
+
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        mColorPrimary = typedValue.data;
+
+        getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
+        mColorPrimaryDark = typedValue.data;
+
+        getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
+        mColorPrimaryAccent = typedValue.data;
     }
 
     @Override
@@ -125,99 +130,29 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     }
 
     private void initToolbar() {
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
-    private void loadVerticalStepperSharedPreferences(SharedPreferences sharedPreferences) {
-        String sharedPreferenceTheme = sharedPreferences.getString(getString(R.string.pref_theme_key),
-                getString(R.string.pref_show_red_theme_label));
+    private void initVerticalStepper() {
+        Log.v(LOG_TAG, "loadVerticalStepperSharedPreferences: called.");
 
-        Log.v(LOG_TAG, "loadVerticalStepperSharedPreferences: load theme from preferences.");
-
-        if(sharedPreferenceTheme != null) {
-            try {
-                if (sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
-                    verticalStepperForm
-                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
-                            .stepNumberColors(getResources().getColor(R.color.colorPrimaryRed),
-                                    getResources().getColor(R.color.verticalStepperTextColor))
-                            .nextButtonColors(getResources().getColor(R.color.colorPrimaryRed),
-                                    getResources().getColor(R.color.colorPrimaryRedDark),
-                                    getResources().getColor(R.color.verticalStepperTextColor),
-                                    getResources().getColor(R.color.verticalStepperTextColor))
-                            .errorMessageTextColor(getResources().getColor(R.color.colorPrimaryRedDark))
-                            .init();
+        verticalStepperForm
+                .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
+                .stepNumberColors(mColorPrimary,
+                        getResources().getColor(R.color.verticalStepperTextColor))
+                .nextButtonColors(mColorPrimary, mColorPrimaryDark,
+                        getResources().getColor(R.color.verticalStepperTextColor),
+                        getResources().getColor(R.color.verticalStepperTextColor))
+                .errorMessageTextColor(mColorPrimaryDark)
+                .init();
 
 
-                    mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryRed));
-                    mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryRed));
+        mPartnerAgeStep.setAgePickerDividerColor(mColorPrimary);
+        mPartnerAgeStep.setAgePickerSelectedTextColor(mColorPrimary);
 
-                    mPartnerGenderStep.setPrimaryColor(getResources().getColor(R.color.colorPrimaryRed));
+        mPartnerGenderStep.setPrimaryColor(mColorPrimary);
 
-                    Log.v(LOG_TAG, "RED theme from Shared Preferences.");
-                } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_blue_theme_key))) {
-                    verticalStepperForm
-                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
-                            .stepNumberColors(getResources().getColor(R.color.colorPrimaryBlue),
-                                    getResources().getColor(R.color.verticalStepperTextColor))
-                            .nextButtonColors(getResources().getColor(R.color.colorPrimaryBlue),
-                                    getResources().getColor(R.color.colorPrimaryBlueDark),
-                                    getResources().getColor(R.color.verticalStepperTextColor),
-                                    getResources().getColor(R.color.verticalStepperTextColor))
-                            .errorMessageTextColor(getResources().getColor(R.color.colorPrimaryBlueDark))
-                            .init();
-
-                    mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryBlue));
-                    mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryBlue));
-
-                    mPartnerGenderStep.setPrimaryColor(getResources().getColor(R.color.colorPrimaryBlue));
-
-
-                    Log.v(LOG_TAG, "BLUE theme from Shared Preferences.");
-                } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_green_theme_key))) {
-                    verticalStepperForm
-                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
-                            .stepNumberColors(getResources().getColor(R.color.colorPrimaryGreen),
-                                    getResources().getColor(R.color.verticalStepperTextColor))
-                            .nextButtonColors(getResources().getColor(R.color.colorPrimaryGreen),
-                                    getResources().getColor(R.color.colorPrimaryGreenDark),
-                                    getResources().getColor(R.color.verticalStepperTextColor),
-                                    getResources().getColor(R.color.verticalStepperTextColor))
-                            .errorMessageTextColor(getResources().getColor(R.color.colorPrimaryGreenDark))
-                            .init();
-
-                    mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryGreen));
-                    mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryGreen));
-
-                    mPartnerGenderStep.setPrimaryColor(getResources().getColor(R.color.colorPrimaryGreen));
-
-
-                    Log.v(LOG_TAG, "GREEN theme from Shared Preferences.");
-                } else if (sharedPreferenceTheme.equals(getString(R.string.pref_show_pink_theme_key))) {
-                    verticalStepperForm
-                            .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
-                            .stepNumberColors(getResources().getColor(R.color.colorPrimaryPink),
-                                    getResources().getColor(R.color.verticalStepperTextColor))
-                            .nextButtonColors(getResources().getColor(R.color.colorPrimaryPink),
-                                    getResources().getColor(R.color.colorPrimaryPinkDark),
-                                    getResources().getColor(R.color.verticalStepperTextColor),
-                                    getResources().getColor(R.color.verticalStepperTextColor))
-                            .errorMessageTextColor(getResources().getColor(R.color.colorPrimaryPinkDark))
-                            .init();
-
-                    mPartnerAgeStep.setAgePickerDividerColor(getResources().getColor(R.color.colorPrimaryPink));
-                    mPartnerAgeStep.setAgePickerSelectedTextColor(getResources().getColor(R.color.colorPrimaryPink));
-
-                    mPartnerGenderStep.setPrimaryColor(getResources().getColor(R.color.colorPrimaryPink));
-
-
-                    Log.v(LOG_TAG, "PINK theme from Shared Preferences.");
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override

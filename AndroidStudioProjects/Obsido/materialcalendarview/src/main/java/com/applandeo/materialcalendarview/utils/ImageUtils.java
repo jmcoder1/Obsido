@@ -1,6 +1,5 @@
 package com.applandeo.materialcalendarview.utils;
 
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
@@ -9,7 +8,6 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.os.Build;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -47,7 +45,11 @@ public class ImageUtils {
      * @param draw The drawable background.
      * @param color The color.
      */
-    public static void setDrawableBackgroundColor(@NonNull Drawable draw, @NonNull int color) {
+    public static void setDrawableBackgroundColor(@NonNull Drawable draw, int color) {
+        if(color == 0) {
+            return;
+        }
+
         if(Build.VERSION.SDK_INT < 21) {
             DrawableCompat.setTint(draw, color);
         } else {
@@ -57,7 +59,7 @@ public class ImageUtils {
 
     /**
      * This mehod sets the color of the event day icon.
-     * @param calendarProperties
+     * @param calendarProperties The resource class containing the color attributes.
      */
     public static void setEventIconColor(CalendarProperties calendarProperties) {
         List<ImageView> icons = calendarProperties.getEventDayIcons();
