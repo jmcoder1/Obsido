@@ -28,6 +28,5 @@ public class CalendarGridView extends GridView {
     }
 
     public void dayClicked(View v) {
-
     }
 }

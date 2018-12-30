@@ -1,11 +1,8 @@
 package com.applandeo.materialcalendarview.listeners;
 
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.annimon.stream.Stream;
 import com.applandeo.materialcalendarview.CalendarUtils;

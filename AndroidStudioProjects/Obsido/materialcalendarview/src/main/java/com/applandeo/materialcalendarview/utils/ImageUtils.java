@@ -67,9 +67,6 @@ public class ImageUtils {
         for(int i = 0; i < icons.size(); i++) {
             ImageView icon = icons.get(i);
             icon.setColorFilter(eventIconColor);
-
-            Drawable draw = icon.getDrawable();
-            setDrawableBackgroundColor(draw, eventIconColor);
         }
     }
 }

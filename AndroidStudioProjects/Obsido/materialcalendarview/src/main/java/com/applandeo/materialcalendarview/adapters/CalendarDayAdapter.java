@@ -26,13 +26,13 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 class CalendarDayAdapter extends ArrayAdapter<Date> {
-    private static final String LOG_TAG = "CalendarDayAdapter".getClass().getSimpleName();
     private CalendarPageAdapter mCalendarPageAdapter;
     private LayoutInflater mLayoutInflater;
     private CalendarProperties mCalendarProperties;
 
     private int mPageMonth;
 
+    // DayClickListener Views
     private List<TextView> mEventDayTextView = new ArrayList<>();
     private View mLastClickedDayParentView;
     private TextView mLastClickedDayTextView;
@@ -69,6 +69,14 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
             mCalendarProperties.addEventDayIcon(dayIcon);
         }
 
+        Calendar today = DateUtils.getCalendar();
+
+        if(day.equals(today)) {
+            mEventDayTextView.add(dayLabel);
+        } else if(isEventDay(day)) {
+            mEventDayTextView.add(dayLabel);
+        }
+
         setLabelColors(dayLabel, dayIcon, dayParent, day);
         dayLabel.setText(String.valueOf(day.get(Calendar.DAY_OF_MONTH)));
 
@@ -76,6 +84,8 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
     }
 
     private void setLabelColors(TextView dayTextView, View dayIcon, View dayParent, Calendar day) {
+        Calendar today = DateUtils.getCalendar();
+
         // Attributes for the days not in the current month
         if (!isCurrentMonthDay(day)) {
             DayColorsUtils.setDayColors(dayTextView, dayParent, mCalendarProperties.getAnotherMonthsDaysLabelsColor(),
@@ -96,17 +106,9 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
             return;
         }
 
-        Calendar today = DateUtils.getCalendar();
-
-        if(day.equals(today)) {
-            mEventDayTextView.add(dayTextView);
-        } else if(isEventDay(day)) {
-            mEventDayTextView.add(dayTextView);
-        }
 
         DayColorsUtils.setCurrentMonthDayColors(day, today, dayTextView, dayParent, mCalendarProperties);
     }
-
 
     private boolean isSelectedDay(Calendar day) {
         return mCalendarProperties.getCalendarType() != CalendarView.CLASSIC && day.get(Calendar.MONTH)
@@ -151,7 +153,7 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
             @Override
             public void onClick(View view) {
                 // Makes sure that triple keeps the selector visible
-                if(mLastClickedDayParentView == dayParentView && mLastClickedDayTextView == dayTextView) {
+                if(mLastClickedDayTextView == dayTextView) {
                     return;
                 }
 
@@ -181,7 +183,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
 
         dayTextView.setOnClickListener(dayClickListener);
         dayIcon.setOnClickListener(dayClickListener);
-        dayParentView.setOnClickListener(dayClickListener);
     }
 
 }
