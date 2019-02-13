@@ -4,21 +4,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.SettingsActivity;
+import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -32,12 +31,10 @@ public class OverviewActivity extends AppCompatActivity implements
 
     // UI XML Views
     private Toolbar mToolbar;
-    private View mHeaderView;
     private DrawerLayout mDrawer;
 
     // Shared Preferences Theme color values
     private int mColorPrimary;
-    private int mColorPrimaryDark;
     private int mColorPrimaryAccent;
 
     @Override
@@ -54,11 +51,11 @@ public class OverviewActivity extends AppCompatActivity implements
 
     private void setUpSharedPreference() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        loadThemeFromPreferences(sharedPreferences);
+        setThemeFromSharedPreferences(sharedPreferences);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
-    private void loadThemeFromPreferences(SharedPreferences sharedPreferences) {
+    private void setThemeFromSharedPreferences(SharedPreferences sharedPreferences) {
         String sharedPreferenceTheme = sharedPreferences.getString(getString(R.string.pref_theme_key),
                 getString(R.string.pref_show_red_theme_label));
 
@@ -80,21 +77,8 @@ public class OverviewActivity extends AppCompatActivity implements
             }
         }
 
-        // Gets the values from the activity theme
-        TypedValue typedValue = new TypedValue();
-
-        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        mColorPrimary = typedValue.data;
-
-        getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
-        mColorPrimaryDark = typedValue.data;
-
-        getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
-        mColorPrimaryAccent = typedValue.data;
-
-        if (mHeaderView != null) {
-            mHeaderView.setBackgroundColor(mColorPrimary);
-        }
+        mColorPrimary = SharedPreferenceUtils.getColorPrimary(getTheme());
+        mColorPrimaryAccent = SharedPreferenceUtils.getColorAccent(getTheme());
     }
 
     private void initFab() {
@@ -124,7 +108,10 @@ public class OverviewActivity extends AppCompatActivity implements
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mHeaderView = navigationView.getHeaderView(0);
+        View headerView = navigationView.getHeaderView(0);
+        if (headerView != null) {
+            headerView.setBackgroundColor(mColorPrimary);
+        }
     }
 
     @Override
@@ -159,18 +146,11 @@ public class OverviewActivity extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_theme_key))) {
-            try {
-                Intent i = getBaseContext().getPackageManager()
-                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                Toast.makeText(this, R.string.shared_preferences_theme_changed, Toast.LENGTH_SHORT).show();
-
-                startActivity(i);
-            } catch(NullPointerException e) {
-                e.printStackTrace();
-            }
+            Intent mIntent = getIntent();
+            finish();
+            startActivity(mIntent);
         }
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

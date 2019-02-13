@@ -10,11 +10,14 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.jojo.obsido.AppDatabase;
+import com.example.jojo.obsido.Partner;
 import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.form.steps.PartnerAgeStep;
 import com.example.jojo.obsido.form.steps.PartnerDescriptionStep;
 import com.example.jojo.obsido.form.steps.PartnerGenderStep;
 import com.example.jojo.obsido.form.steps.PartnerNameStep;
+import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,13 +25,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.preference.PreferenceManager;
 
+import androidx.room.Room;
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
 import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 
-public class EditProfileActivity extends AppCompatActivity implements StepperFormListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class EditProfileActivity extends AppCompatActivity implements StepperFormListener {
 
     private static final String LOG_TAG = "EditProfileActivity".getClass().getSimpleName();
+    public static AppDatabase mAppDatabase;
 
     // Vertical Stepper form elements
     private VerticalStepperFormView verticalStepperForm;
@@ -40,7 +44,6 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     // Shared Preferences Theme color values
     private int mColorPrimary;
     private int mColorPrimaryDark;
-    private int mColorPrimaryAccent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,6 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
         mPartnerGenderStep = new PartnerGenderStep(getResources()
                 .getString(R.string.stepper_add_partner_gender));
 
-        verticalStepperForm = findViewById(R.id.stepper_form);
         initVerticalStepper();
 
         // TODO: Change this when data syncing is updated to ( SQL --> Firebase && Firebase --> SQL)
@@ -76,15 +78,15 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
 
     private void setUpSharedPreference() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        loadThemeFromPreferences(sharedPreferences);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        setThemeFromSharedPreferences(sharedPreferences);
     }
 
-    private void loadThemeFromPreferences(SharedPreferences sharedPreferences) {
+    private void setThemeFromSharedPreferences(SharedPreferences sharedPreferences) {
         String sharedPreferenceTheme = sharedPreferences.getString(getString(R.string.pref_theme_key),
                 getString(R.string.pref_show_red_theme_label));
-
         Log.v(LOG_TAG, "loadThemeFromPreferences: called.");
+
+        // Sets the activity theme based on the user Shared Preferences choice
         if(sharedPreferenceTheme != null) {
             try {
                 if (sharedPreferenceTheme.equals(getString(R.string.pref_show_red_theme_key))) {
@@ -101,17 +103,8 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
             }
         }
 
-        // Gets the values from the activity theme
-        TypedValue typedValue = new TypedValue();
-
-        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        mColorPrimary = typedValue.data;
-
-        getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
-        mColorPrimaryDark = typedValue.data;
-
-        getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
-        mColorPrimaryAccent = typedValue.data;
+        mColorPrimary = SharedPreferenceUtils.getColorPrimary(getTheme());
+        mColorPrimaryDark = SharedPreferenceUtils.getColorPrimaryDark(getTheme());
     }
 
     @Override
@@ -120,6 +113,19 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
         // form in an attempt to save or send the data.
         Log.v(LOG_TAG, "onCompletedForm: vertical stepper form completed.");
 
+        String partnerName = mPartnerNameStep.getStepData();
+        String partnerDescription = mPartnerDescriptionStep.getStepData();
+        int partnerAge = mPartnerAgeStep.getStepData();
+        int partnerGender = mPartnerGenderStep.getStepData();
+
+        /*Partner partner = new Partner();
+        partner.setName(partnerName);
+        partner.setDescription(partnerDescription);
+        partner.setAge(partnerAge);
+        partner.setGender(partnerGender);
+
+        PartnersListActivity.mAppDatabase.partnerDao().insert(partner);*/
+        finish();
     }
 
     @Override
@@ -136,7 +142,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
 
     private void initVerticalStepper() {
         Log.v(LOG_TAG, "loadVerticalStepperSharedPreferences: called.");
-
+        verticalStepperForm = findViewById(R.id.stepper_form);
         verticalStepperForm
                 .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
                 .stepNumberColors(mColorPrimary,
@@ -217,11 +223,6 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-    }
-
-    @Override
     public void onBackPressed() {
         // If the partner hasn't changed, continue with handling back button press
         // Otherwise if there are unsaved changes, setup a dialog to warn the user.
@@ -239,10 +240,4 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
 }

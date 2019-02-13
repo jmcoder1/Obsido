@@ -2,31 +2,29 @@ package com.example.jojo.obsido.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
-
-import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.View;
-
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
 
+import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -44,13 +42,12 @@ public class CalendarActivity extends AppCompatActivity implements
     private static final String LOG_TAG = "CalendarActivity".getClass().getSimpleName();
 
     // UI XML Views
-    private View mHeaderView;
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private CalendarView mCalendarView;
     private boolean mEventsHidden = false;
 
-    // Shared Preferences Theme color values
+    // Theme colors
     private int mColorPrimary;
     private int mColorPrimaryDark;
     private int mColorPrimaryAccent;
@@ -67,16 +64,15 @@ public class CalendarActivity extends AppCompatActivity implements
         initDrawer();
         initCalendarView();
         initEvents();
-
     }
 
     private void setUpSharedPreference() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        loadThemeFromPreferences(sharedPreferences);
+        setThemeFromSharedPreferences(sharedPreferences);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
-    private void loadThemeFromPreferences(SharedPreferences sharedPreferences) {
+    private void setThemeFromSharedPreferences(SharedPreferences sharedPreferences) {
         String sharedPreferenceTheme = sharedPreferences.getString(getString(R.string.pref_theme_key),
                 getString(R.string.pref_show_red_theme_label));
         Log.v(LOG_TAG, "loadThemeFromPreferences: called.");
@@ -98,30 +94,9 @@ public class CalendarActivity extends AppCompatActivity implements
             }
         }
 
-        // Gets the values from the activity theme
-        TypedValue typedValue = new TypedValue();
-
-        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        mColorPrimary = typedValue.data;
-
-        getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
-        mColorPrimaryDark = typedValue.data;
-
-        getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
-        mColorPrimaryAccent = typedValue.data;
-
-        if (mHeaderView != null) {
-            mHeaderView.setBackgroundColor(mColorPrimary);
-        }
-
-        if (mCalendarView != null) {
-            mCalendarView.setSelectionColor(mColorPrimary);
-            mCalendarView.setEventDayColor(mColorPrimary);
-            mCalendarView.setWeekDayBarColor(mColorPrimary);
-            mCalendarView.setTodayColor(mColorPrimaryAccent);
-            mCalendarView.setEventIconColor(mColorPrimaryDark);
-        }
-
+        mColorPrimary = SharedPreferenceUtils.getColorPrimary(getTheme());
+        mColorPrimaryAccent = SharedPreferenceUtils.getColorAccent(getTheme());
+        mColorPrimaryDark = SharedPreferenceUtils.getColorPrimaryDark(getTheme());
     }
 
     private void initToolbar() {
@@ -159,7 +134,11 @@ public class CalendarActivity extends AppCompatActivity implements
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mHeaderView = navigationView.getHeaderView(0);
+        View headerView = navigationView.getHeaderView(0);
+
+        if (headerView != null) {
+            headerView.setBackgroundColor(mColorPrimary);
+        }
     }
 
     private void initCalendarView() {
@@ -192,6 +171,15 @@ public class CalendarActivity extends AppCompatActivity implements
                 }
             }
         });
+
+        // Changes the Calendar View colors
+        if (mCalendarView != null) {
+            mCalendarView.setSelectionColor(mColorPrimary);
+            mCalendarView.setEventDayColor(mColorPrimary);
+            mCalendarView.setWeekDayBarColor(mColorPrimary);
+            mCalendarView.setTodayColor(mColorPrimaryAccent);
+            mCalendarView.setEventIconColor(mColorPrimaryDark);
+        }
     }
 
     private void initEvents() {
@@ -271,18 +259,11 @@ public class CalendarActivity extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_theme_key))) {
-            try {
-                Intent i = getBaseContext().getPackageManager()
-                        .getLaunchIntentForPackage(getBaseContext().getPackageName() );
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                Toast.makeText(this, R.string.shared_preferences_theme_changed, Toast.LENGTH_SHORT).show();
-
-                startActivity(i);
-            } catch(NullPointerException e) {
-                e.printStackTrace();
-            }
+            Intent mIntent = getIntent();
+            finish();
+            startActivity(mIntent);
         }
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -329,6 +310,5 @@ public class CalendarActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         setUpSharedPreference();
-
     }
 }

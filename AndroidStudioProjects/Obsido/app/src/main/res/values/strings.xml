@@ -45,10 +45,6 @@
 
         <!-- User lists layer-->
         <string name="nav_partners" translatable="true">Partners</string>
-        <string name="nav_fetishes" translatable="true">Fetishes</string>
-        <string name="nav_sex_acts" translatable="true">Sex Acts</string>
-        <string name="nav_places" translatable="true">Places</string>
-        <string name="nav_positions" translatable="true">Positions</string>
 
         <!-- User states layer -->
         <string name="nav_view_remove_ads" translatable="true">Remove Ads</string>

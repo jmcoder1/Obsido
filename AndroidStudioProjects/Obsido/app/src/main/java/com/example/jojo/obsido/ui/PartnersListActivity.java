@@ -5,44 +5,50 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.example.jojo.obsido.PartnerCursorAdapter;
+import com.example.jojo.obsido.AppDatabase;
+import com.example.jojo.obsido.Partner;
+import com.example.jojo.obsido.PartnerAdapter;
+import com.example.jojo.obsido.PartnerViewModel;
+import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.SettingsActivity;
+import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import com.example.jojo.obsido.R;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class PartnersListActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private PartnerViewModel partnerViewModel;
     private static final String LOG_TAG = "PartnersListActivity".getClass().getSimpleName();
 
     // UI XML View
     private Toolbar mToolbar;
-    private View mHeaderView;
     private DrawerLayout mDrawer;
+
 
     // Shared Preferences Theme color values
     private int mColorPrimary;
-    private int mColorPrimaryDark;
     private int mColorPrimaryAccent;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,28 +61,38 @@ public class PartnersListActivity extends AppCompatActivity implements
         initToolbar();
         initDrawer();
 
-        PartnerCursorAdapter partnerCursorAdapter = new PartnerCursorAdapter(this, null);
-        ListView partnerListView = findViewById(R.id.partners_list);
-        partnerListView.setAdapter(partnerCursorAdapter);
+        final PartnerAdapter partnerAdapter = new PartnerAdapter();
 
-        View emptyView = findViewById(R.id.empty_view);
-        partnerListView.setEmptyView(emptyView);
-        partnerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        RecyclerView partnerRecyclerView = findViewById(R.id.partners_list);
+        partnerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        partnerRecyclerView.setHasFixedSize(true);
+        partnerRecyclerView.setAdapter(partnerAdapter);
+
+        partnerViewModel = ViewModelProviders.of(this).get(PartnerViewModel.class);
+        partnerViewModel.getAllPartners().observe(this, new Observer<List<Partner>>() {
+            @Override
+            public void onChanged(@Nullable List<Partner> partners) {
+                partnerAdapter.setPartners(partners);
+            }
+        });
+        //View emptyView = findViewById(R.id.empty_view);
+        //partnerRecyclerView.setEmptyView(emptyView);
+        /*partnerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO: what should happen when a partner from the list is clicked
             }
-        });
+        })*/
 
     }
 
     private void setUpSharedPreference() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        loadThemeFromPreferences(sharedPreferences);
+        setThemeFromSharedPreferences(sharedPreferences);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
-    private void loadThemeFromPreferences(SharedPreferences sharedPreferences) {
+    private void setThemeFromSharedPreferences(SharedPreferences sharedPreferences) {
         String sharedPreferenceTheme = sharedPreferences.getString(getString(R.string.pref_theme_key),
                 getString(R.string.pref_show_red_theme_label));
 
@@ -99,20 +115,8 @@ public class PartnersListActivity extends AppCompatActivity implements
         }
 
         // Gets the values from the activity theme
-        TypedValue typedValue = new TypedValue();
-
-        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        mColorPrimary = typedValue.data;
-
-        getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
-        mColorPrimaryDark = typedValue.data;
-
-        getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
-        mColorPrimaryAccent = typedValue.data;
-
-        if (mHeaderView != null) {
-            mHeaderView.setBackgroundColor(mColorPrimary);
-        }
+        mColorPrimary = SharedPreferenceUtils.getColorPrimary(getTheme());
+        mColorPrimaryAccent = SharedPreferenceUtils.getColorAccent(getTheme());
     }
 
     private void initFab() {
@@ -143,7 +147,10 @@ public class PartnersListActivity extends AppCompatActivity implements
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mHeaderView = navigationView.getHeaderView(0);
+        View headerView = navigationView.getHeaderView(0);
+        if (headerView != null) {
+            headerView.setBackgroundColor(mColorPrimary);
+        }
     }
 
     @Override
@@ -179,18 +186,11 @@ public class PartnersListActivity extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_theme_key))) {
-            try {
-                Intent i = getBaseContext().getPackageManager()
-                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                Toast.makeText(this, R.string.shared_preferences_theme_changed, Toast.LENGTH_SHORT).show();
-
-                startActivity(i);
-            } catch(NullPointerException e) {
-                e.printStackTrace();
-            }
+            Intent mIntent = getIntent();
+            finish();
+            startActivity(mIntent);
         }
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -240,4 +240,5 @@ public class PartnersListActivity extends AppCompatActivity implements
         super.onResume();
         setUpSharedPreference();
     }
+
 }

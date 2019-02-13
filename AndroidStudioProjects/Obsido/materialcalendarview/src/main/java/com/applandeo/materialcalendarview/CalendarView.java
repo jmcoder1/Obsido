@@ -196,7 +196,8 @@ public class CalendarView extends LinearLayout {
         for(int i = 0; i < icons.size(); i++) {
             ImageView icon = icons.get(i);
             icon.setVisibility(VISIBLE);
-        }    }
+        }
+    }
 
     private void setUpCalendarPosition(Calendar calendar) {
         DateUtils.setMidnight(calendar);

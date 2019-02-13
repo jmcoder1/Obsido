@@ -31,27 +31,28 @@
             android:id="@+id/nav_partners"
             android:icon="@drawable/ic_nav_partners"
             android:title="@string/nav_partners" />
+
         <item
-            android:id="@+id/nav_fetishes"
-            android:icon="@drawable/ic_nav_fetishes"
-            android:title="@string/nav_fetishes" />
+            android:id="@+id/nav_achievements"
+            android:icon="@drawable/ic_nav_achievements"
+            android:title="@string/nav_view_achievements" />
+
         <item
-            android:id="@+id/nav_sex_acts"
-            android:icon="@drawable/ic_nav_sex_acts"
-            android:title="@string/nav_sex_acts" />
-        <item
-            android:id="@+id/nav_places"
-            android:icon="@drawable/ic_nav_places"
-            android:title="@string/nav_places" />
-        <item
-            android:id="@+id/nav_positions"
-            android:icon="@drawable/ic_nav_positions"
-            android:title="@string/nav_positions" />
+            android:id="@+id/nav_reminders"
+            android:icon="@drawable/ic_nav_reminders"
+            android:title="@string/nav_view_reminders" />
+
     </group>
 
     <group
         android:id="@+id/nav_type_user_states"
         android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_passwords"
+            android:icon="@drawable/ic_nav_password"
+            android:title="@string/nav_view_password" />
+
         <item
             android:id="@+id/nav_remove_ads"
             android:icon="@drawable/ic_nav_remove_ads"
@@ -61,11 +62,6 @@
             android:id="@+id/nav_contact_support"
             android:icon="@drawable/ic_nav_contact_support"
             android:title="@string/nav_view_contact_support" />
-
-        <item
-            android:id="@+id/nav_reminders"
-            android:icon="@drawable/ic_nav_reminders"
-            android:title="@string/nav_view_reminders" />
 
     </group>
 
