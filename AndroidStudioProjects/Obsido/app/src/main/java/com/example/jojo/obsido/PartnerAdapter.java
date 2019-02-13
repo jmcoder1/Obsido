@@ -40,6 +40,10 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.PartnerH
         notifyDataSetChanged();
     }
 
+    public Partner getPartnerAt(int position) {
+        return partners.get(position);
+    }
+
     class PartnerHolder extends RecyclerView.ViewHolder {
         private TextView textViewName;
         private TextView textViewDescription;
@@ -50,4 +54,8 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.PartnerH
             textViewDescription = itemView.findViewById(R.id.partner_status);
         }
     }
+
+    /*public interface OnItemClickListener {
+        void onItemClick(Partner partner);
+    }*/
 }

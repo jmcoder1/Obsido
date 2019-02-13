@@ -34,6 +34,15 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     private static final String LOG_TAG = "EditProfileActivity".getClass().getSimpleName();
     public static AppDatabase mAppDatabase;
 
+    public static final String EXTRA_PARTNER_NAME =
+            "com.example.jojo.obsido.EXTRA_PARTNER_NAME";
+    public static final String EXTRA_PARTNER_DESCRIPTION =
+            "com.example.jojo.obsido.EXTRA_PARTNER_DESCRIPTION";
+    public static final String EXTRA_PARTNER_GENDER =
+            "com.example.jojo.obsido.EXTRA_PARTNER_GENDER";
+    public static final String EXTRA_PARTNER_AGE =
+            "com.example.jojo.obsido.EXTRA_PARTNER_GENDER";
+
     // Vertical Stepper form elements
     private VerticalStepperFormView verticalStepperForm;
     private PartnerNameStep mPartnerNameStep;
@@ -107,25 +116,28 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
         mColorPrimaryDark = SharedPreferenceUtils.getColorPrimaryDark(getTheme());
     }
 
-    @Override
-    public void onCompletedForm() {
-        // This method will be called when the user clicks on the last confirmation button of the
-        // form in an attempt to save or send the data.
-        Log.v(LOG_TAG, "onCompletedForm: vertical stepper form completed.");
-
+    private void savePartner() {
         String partnerName = mPartnerNameStep.getStepData();
         String partnerDescription = mPartnerDescriptionStep.getStepData();
         int partnerAge = mPartnerAgeStep.getStepData();
         int partnerGender = mPartnerGenderStep.getStepData();
 
-        /*Partner partner = new Partner();
-        partner.setName(partnerName);
-        partner.setDescription(partnerDescription);
-        partner.setAge(partnerAge);
-        partner.setGender(partnerGender);
+        Intent data = new Intent();
+        data.putExtra(EXTRA_PARTNER_NAME, partnerName);
+        data.putExtra(EXTRA_PARTNER_DESCRIPTION, partnerDescription);
+        data.putExtra(EXTRA_PARTNER_AGE, partnerAge);
+        data.putExtra(EXTRA_PARTNER_GENDER, partnerGender);
 
-        PartnersListActivity.mAppDatabase.partnerDao().insert(partner);*/
+        setResult(RESULT_OK, data);
         finish();
+    }
+
+    @Override
+    public void onCompletedForm() {
+        // This method will be called when the user clicks on the last confirmation button of the
+        // form in an attempt to save or send the data.
+        Log.v(LOG_TAG, "onCompletedForm: vertical stepper form completed.");
+        savePartner();
     }
 
     @Override
@@ -181,7 +193,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                // TODO: What to do when the form is completed
+                // TODO: Only run if isCompleted savePartner();
                 return true;
 
             case android.R.id.home:

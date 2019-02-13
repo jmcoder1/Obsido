@@ -18,6 +18,7 @@ import com.example.jojo.obsido.SettingsActivity;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 
 import java.util.List;
@@ -32,11 +33,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PartnersListActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+
+    public static final int ADD_PARTNER_REQUEST = 1;
+    public static final int EDIT_PARTNER_REQUEST = 2;
 
     private PartnerViewModel partnerViewModel;
     private static final String LOG_TAG = "PartnersListActivity".getClass().getSimpleName();
@@ -84,6 +89,19 @@ public class PartnersListActivity extends AppCompatActivity implements
             }
         })*/
 
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                partnerViewModel.delete(partnerAdapter.getPartnerAt(viewHolder.getAdapterPosition()));
+            }
+        }).attachToRecyclerView(partnerRecyclerView);
+
     }
 
     private void setUpSharedPreference() {
@@ -125,8 +143,8 @@ public class PartnersListActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "initFab: adding a partner flaoting action button");
-                Intent addingPartnerIntent = new Intent(PartnersListActivity.this, EditProfileActivity.class);
-                startActivity(addingPartnerIntent);
+                Intent partnerIntent = new Intent(PartnersListActivity.this, EditProfileActivity.class);
+                startActivityForResult(partnerIntent, ADD_PARTNER_REQUEST);
             }
         });
 
@@ -178,6 +196,8 @@ public class PartnersListActivity extends AppCompatActivity implements
                 startActivity(startSettingsActivity);
 
                 return true;
+            case R.id.action_delete_all_entries:
+                partnerViewModel.deleteAllNotes();
 
         }
         return super.onOptionsItemSelected(item);
@@ -241,4 +261,25 @@ public class PartnersListActivity extends AppCompatActivity implements
         setUpSharedPreference();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_PARTNER_REQUEST && resultCode == RESULT_OK) {
+            String partnerName = data.getStringExtra(EditProfileActivity.EXTRA_PARTNER_NAME);
+            String partnerDescription = data.getStringExtra(EditProfileActivity.EXTRA_PARTNER_DESCRIPTION);
+            int partnerAge = data.getIntExtra(EditProfileActivity.EXTRA_PARTNER_AGE, 0);
+            int partnerGender = data.getIntExtra(EditProfileActivity.EXTRA_PARTNER_GENDER, 0);
+
+            Partner partner = new Partner(partnerName, partnerDescription, partnerAge, partnerGender);
+            partnerViewModel.insert(partner);
+
+            Snackbar.make(getWindow().getDecorView().getRootView(), "Partner saved",
+                    Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+        } else {
+            Snackbar.make(getWindow().getDecorView().getRootView(), "Partner not saved",
+                    Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }
+    }
 }

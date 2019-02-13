@@ -29,10 +29,10 @@
     <location key="git4idea.ui.GitResetDialog.0.0.1366.768" x="497" y="269" />
     <location key="RollbackChangesDialog.0.0.1366.768" x="363" y="77" />
     <size key="ProcessPopupWindow.0.0.1366.768" width="400" height="190" />
-    <size key="GridCell.Tab.0.left.0.0.1366.768" width="660" height="175" />
-    <size key="GridCell.Tab.0.center.0.0.1366.768" width="660" height="175" />
-    <size key="GridCell.Tab.0.right.0.0.1366.768" width="660" height="175" />
-    <size key="GridCell.Tab.0.bottom.0.0.1366.768" width="660" height="175" />
+    <size key="GridCell.Tab.0.left.0.0.1366.768" width="0" height="0" />
+    <size key="GridCell.Tab.0.center.0.0.1366.768" width="0" height="0" />
+    <size key="GridCell.Tab.0.right.0.0.1366.768" width="0" height="0" />
+    <size key="GridCell.Tab.0.bottom.0.0.1366.768" width="0" height="0" />
     <size key="CommitChangelistDialog2.0.0.1366.768" width="672" height="719" />
     <size key="find.popup.0.0.1366.768" width="617" height="655" />
     <size key="GitCloneDialog.0.0.1366.768" width="596" height="209" />

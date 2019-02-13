@@ -27,7 +27,7 @@ public class PartnerRepository {
     }
 
     public void delete(Partner partner) {
-        new DeleteAllPartnerAsyncTask(partnerDao).execute(partner);
+        new DeletePartnerAsyncTask(partnerDao).execute(partner);
     }
 
     public void deleteAllPartners() {
