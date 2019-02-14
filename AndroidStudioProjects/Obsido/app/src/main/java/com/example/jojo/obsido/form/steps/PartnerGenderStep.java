@@ -23,6 +23,9 @@ public class PartnerGenderStep extends Step<Integer> {
     private ImageView lastGenderIcon;
     private TextView lastGenderLabel;
 
+    private ImageView mMaleGenderIcon, mFemaleGenderIcon;
+    private TextView mMaleGenderLabel, mFemaleGenderLabel;
+
     private int mPrimaryColor;
 
     public PartnerGenderStep(String title) {
@@ -47,7 +50,8 @@ public class PartnerGenderStep extends Step<Integer> {
 
     @Override
     protected void onStepOpened(boolean animated) {
-        // No need to do anything here
+        Log.v(LOG_TAG, "onStepOpened: called");
+        updateSubtitle(getStepDataAsHumanReadableString(), false);
     }
 
     @Override
@@ -86,6 +90,24 @@ public class PartnerGenderStep extends Step<Integer> {
     @Override
     public void restoreStepData(Integer data) {
         partnerGenderEnum = data;
+
+        updateSubtitle(Integer.toString(partnerGenderEnum), false);
+        if(partnerGenderEnum == GENDER_MALE) {
+            mMaleGenderIcon.setColorFilter(mPrimaryColor);
+            mMaleGenderLabel.setTextColor(mPrimaryColor);
+
+            lastGenderIcon = mMaleGenderIcon;
+            lastGenderLabel = mMaleGenderLabel;
+            markAsCompletedOrUncompleted(true);
+        } else if(partnerGenderEnum == GENDER_FEMALE) {
+            mFemaleGenderIcon.setColorFilter(mPrimaryColor);
+            mFemaleGenderLabel.setTextColor(mPrimaryColor);
+
+            lastGenderIcon = mFemaleGenderIcon;
+            lastGenderLabel = mFemaleGenderLabel;
+            markAsCompletedOrUncompleted(true);
+        }
+
     }
 
     @Override
@@ -98,14 +120,14 @@ public class PartnerGenderStep extends Step<Integer> {
     }
 
     private void setupPartnerGender(View genderStepContent) {
-        ImageView maleGenderIcon = genderStepContent.findViewById(R.id.male);
-        TextView maleGenderLabel = genderStepContent.findViewById(R.id.maleGenderLabel);
+        mMaleGenderIcon = genderStepContent.findViewById(R.id.male);
+        mMaleGenderLabel = genderStepContent.findViewById(R.id.maleGenderLabel);
 
-        ImageView femaleGenderIcon = genderStepContent.findViewById(R.id.female);
-        TextView femaleGenderLabel = genderStepContent.findViewById(R.id.femaleGenderLabel);
+        mFemaleGenderIcon = genderStepContent.findViewById(R.id.female);
+        mFemaleGenderLabel = genderStepContent.findViewById(R.id.femaleGenderLabel);
 
-        setGenderClickListener(maleGenderIcon, maleGenderLabel);
-        setGenderClickListener(femaleGenderIcon, femaleGenderLabel);
+        setGenderClickListener(mMaleGenderIcon, mMaleGenderLabel);
+        setGenderClickListener(mFemaleGenderIcon, mFemaleGenderLabel);
     }
 
     public void setPrimaryColor(int color) {

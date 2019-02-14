@@ -6,12 +6,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.jojo.obsido.AppDatabase;
-import com.example.jojo.obsido.Partner;
 import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.form.steps.PartnerAgeStep;
 import com.example.jojo.obsido.form.steps.PartnerDescriptionStep;
@@ -25,15 +23,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.preference.PreferenceManager;
 
-import androidx.room.Room;
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
 import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 
-public class EditProfileActivity extends AppCompatActivity implements StepperFormListener {
+public class AddEditProfileActivity extends AppCompatActivity implements StepperFormListener {
 
-    private static final String LOG_TAG = "EditProfileActivity".getClass().getSimpleName();
-    public static AppDatabase mAppDatabase;
+    private static final String LOG_TAG = "AddEditProfileActivity".getClass().getSimpleName();
 
+    public static final String EXTRA_PARTNER_ID =
+            "com.example.jojo.obsido.EXTRA_PARTNER_ID";
     public static final String EXTRA_PARTNER_NAME =
             "com.example.jojo.obsido.EXTRA_PARTNER_NAME";
     public static final String EXTRA_PARTNER_DESCRIPTION =
@@ -41,7 +39,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     public static final String EXTRA_PARTNER_GENDER =
             "com.example.jojo.obsido.EXTRA_PARTNER_GENDER";
     public static final String EXTRA_PARTNER_AGE =
-            "com.example.jojo.obsido.EXTRA_PARTNER_GENDER";
+            "com.example.jojo.obsido.EXTRA_PARTNER_AGE";
 
     // Vertical Stepper form elements
     private VerticalStepperFormView verticalStepperForm;
@@ -74,14 +72,16 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
 
         initVerticalStepper();
 
-        // TODO: Change this when data syncing is updated to ( SQL --> Firebase && Firebase --> SQL)
         Intent intent = getIntent();
-        Uri partnerUri = intent.getData();
 
-        if(partnerUri == null) {
+        if(!intent.hasExtra(EXTRA_PARTNER_ID)) {
             setTitle(R.string.stepper_add_partner);
         } else {
             setTitle(R .string.stepper_edit_partner);
+            mPartnerNameStep.restoreStepData(intent.getStringExtra(EXTRA_PARTNER_NAME));
+            mPartnerDescriptionStep.restoreStepData(intent.getStringExtra(EXTRA_PARTNER_DESCRIPTION));
+            mPartnerAgeStep.restoreStepData(intent.getIntExtra(EXTRA_PARTNER_AGE, 0));
+            mPartnerGenderStep.restoreStepData(intent.getIntExtra(EXTRA_PARTNER_GENDER,0));
         }
     }
 
@@ -119,15 +119,19 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
     private void savePartner() {
         String partnerName = mPartnerNameStep.getStepData();
         String partnerDescription = mPartnerDescriptionStep.getStepData();
-        int partnerAge = mPartnerAgeStep.getStepData();
-        int partnerGender = mPartnerGenderStep.getStepData();
+        String partnerAge = mPartnerAgeStep.getStepDataAsHumanReadableString();
+        String partnerGender = Integer.toString(mPartnerGenderStep.getStepData());
 
         Intent data = new Intent();
         data.putExtra(EXTRA_PARTNER_NAME, partnerName);
         data.putExtra(EXTRA_PARTNER_DESCRIPTION, partnerDescription);
-        data.putExtra(EXTRA_PARTNER_AGE, partnerAge);
-        data.putExtra(EXTRA_PARTNER_GENDER, partnerGender);
+        data.putExtra(EXTRA_PARTNER_AGE, Integer.parseInt(partnerAge));
+        data.putExtra(EXTRA_PARTNER_GENDER, Integer.parseInt(partnerGender));
 
+        int id = getIntent().getIntExtra(EXTRA_PARTNER_ID, -1);
+        if(id != -1) {
+            data.putExtra(EXTRA_PARTNER_ID, id);
+        }
         setResult(RESULT_OK, data);
         finish();
     }
@@ -202,7 +206,7 @@ public class EditProfileActivity extends AppCompatActivity implements StepperFor
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // User clicked "Discard" button, navigate to parent activity.
-                                NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
+                                NavUtils.navigateUpFromSameTask(AddEditProfileActivity.this);
                             }
                         };
 

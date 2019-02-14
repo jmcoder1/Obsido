@@ -5,15 +5,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.PartnerHolder> {
+public class PartnerAdapter extends ListAdapter<Partner, PartnerAdapter.PartnerHolder> {
+    private OnItemClickListener listener;
+    public PartnerAdapter() {
+        super(DIFF_CALLBACK);
+    }
 
-    private List<Partner> partners = new ArrayList<>();
+    private static final DiffUtil.ItemCallback<Partner> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<Partner>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Partner oldItem, @NonNull Partner newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Partner oldItem, @NonNull Partner newItem) {
+            return oldItem.getName().equals(newItem.getName());
+        }
+    };
 
     @NonNull
     @Override
@@ -25,23 +39,13 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.PartnerH
 
     @Override
     public void onBindViewHolder(@NonNull PartnerHolder holder, int position) {
-        Partner currentPartner = partners.get(position);
+        Partner currentPartner = getItem(position);
         holder.textViewName.setText(currentPartner.getName());
         holder.textViewDescription.setText(currentPartner.getDescription());
     }
 
-    @Override
-    public int getItemCount() {
-        return partners.size();
-    }
-
-    public void setPartners(List<Partner> partners) {
-        this.partners = partners;
-        notifyDataSetChanged();
-    }
-
     public Partner getPartnerAt(int position) {
-        return partners.get(position);
+        return getItem(position);
     }
 
     class PartnerHolder extends RecyclerView.ViewHolder {
@@ -52,10 +56,25 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.PartnerH
             super(itemView);
             textViewName = itemView.findViewById(R.id.partner_name);
             textViewDescription = itemView.findViewById(R.id.partner_status);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(getItem(position));
+                    }
+
+                }
+            });
         }
     }
 
-    /*public interface OnItemClickListener {
+    public interface OnItemClickListener {
         void onItemClick(Partner partner);
-    }*/
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 }

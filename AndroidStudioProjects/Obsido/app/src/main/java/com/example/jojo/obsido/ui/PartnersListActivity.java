@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.jojo.obsido.AppDatabase;
 import com.example.jojo.obsido.Partner;
 import com.example.jojo.obsido.PartnerAdapter;
 import com.example.jojo.obsido.PartnerViewModel;
@@ -19,7 +18,6 @@ import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-
 
 import java.util.List;
 
@@ -50,7 +48,6 @@ public class PartnersListActivity extends AppCompatActivity implements
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
 
-
     // Shared Preferences Theme color values
     private int mColorPrimary;
     private int mColorPrimaryAccent;
@@ -66,28 +63,20 @@ public class PartnersListActivity extends AppCompatActivity implements
         initToolbar();
         initDrawer();
 
-        final PartnerAdapter partnerAdapter = new PartnerAdapter();
-
         RecyclerView partnerRecyclerView = findViewById(R.id.partners_list);
         partnerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         partnerRecyclerView.setHasFixedSize(true);
+
+        final PartnerAdapter partnerAdapter = new PartnerAdapter();
         partnerRecyclerView.setAdapter(partnerAdapter);
 
         partnerViewModel = ViewModelProviders.of(this).get(PartnerViewModel.class);
         partnerViewModel.getAllPartners().observe(this, new Observer<List<Partner>>() {
             @Override
             public void onChanged(@Nullable List<Partner> partners) {
-                partnerAdapter.setPartners(partners);
+                partnerAdapter.submitList(partners);
             }
         });
-        //View emptyView = findViewById(R.id.empty_view);
-        //partnerRecyclerView.setEmptyView(emptyView);
-        /*partnerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO: what should happen when a partner from the list is clicked
-            }
-        })*/
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
@@ -101,7 +90,19 @@ public class PartnersListActivity extends AppCompatActivity implements
                 partnerViewModel.delete(partnerAdapter.getPartnerAt(viewHolder.getAdapterPosition()));
             }
         }).attachToRecyclerView(partnerRecyclerView);
-
+        partnerAdapter.setOnItemClickListener(new PartnerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Partner partner) {
+                Intent intent = new Intent(PartnersListActivity.this,
+                        AddEditProfileActivity.class);
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_NAME, partner.getName());
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_DESCRIPTION, partner.getDescription());
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_AGE, partner.getAge());
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_GENDER, partner.getGender());
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_ID, partner.getId());
+                startActivityForResult(intent, EDIT_PARTNER_REQUEST);
+            }
+        });
     }
 
     private void setUpSharedPreference() {
@@ -143,7 +144,7 @@ public class PartnersListActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "initFab: adding a partner flaoting action button");
-                Intent partnerIntent = new Intent(PartnersListActivity.this, EditProfileActivity.class);
+                Intent partnerIntent = new Intent(PartnersListActivity.this, AddEditProfileActivity.class);
                 startActivityForResult(partnerIntent, ADD_PARTNER_REQUEST);
             }
         });
@@ -266,16 +267,32 @@ public class PartnersListActivity extends AppCompatActivity implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ADD_PARTNER_REQUEST && resultCode == RESULT_OK) {
-            String partnerName = data.getStringExtra(EditProfileActivity.EXTRA_PARTNER_NAME);
-            String partnerDescription = data.getStringExtra(EditProfileActivity.EXTRA_PARTNER_DESCRIPTION);
-            int partnerAge = data.getIntExtra(EditProfileActivity.EXTRA_PARTNER_AGE, 0);
-            int partnerGender = data.getIntExtra(EditProfileActivity.EXTRA_PARTNER_GENDER, 0);
+            String partnerName = data.getStringExtra(AddEditProfileActivity.EXTRA_PARTNER_NAME);
+            String partnerDescription = data.getStringExtra(AddEditProfileActivity.EXTRA_PARTNER_DESCRIPTION);
+            int partnerAge = data.getIntExtra(AddEditProfileActivity.EXTRA_PARTNER_AGE, 0);
+            int partnerGender = data.getIntExtra(AddEditProfileActivity.EXTRA_PARTNER_GENDER, 0);
 
             Partner partner = new Partner(partnerName, partnerDescription, partnerAge, partnerGender);
             partnerViewModel.insert(partner);
 
             Snackbar.make(getWindow().getDecorView().getRootView(), "Partner saved",
                     Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+        } else if (requestCode == EDIT_PARTNER_REQUEST && resultCode == RESULT_OK) {
+            int id = data.getIntExtra(AddEditProfileActivity.EXTRA_PARTNER_ID, -1);
+
+            if (id == -1) {
+                return;
+            }
+
+            String partnerName = data.getStringExtra(AddEditProfileActivity.EXTRA_PARTNER_NAME);
+            String partnerDescription = data.getStringExtra(AddEditProfileActivity.EXTRA_PARTNER_DESCRIPTION);
+            int partnerAge = data.getIntExtra(AddEditProfileActivity.EXTRA_PARTNER_AGE, 0);
+            int partnerGender = data.getIntExtra(AddEditProfileActivity.EXTRA_PARTNER_GENDER, 0);
+
+            Partner partner = new Partner(partnerName, partnerDescription, partnerAge, partnerGender);
+            partner.setId(id);
+            partnerViewModel.update(partner);
 
         } else {
             Snackbar.make(getWindow().getDecorView().getRootView(), "Partner not saved",

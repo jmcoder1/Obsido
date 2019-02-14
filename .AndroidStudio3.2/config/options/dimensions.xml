@@ -36,10 +36,10 @@
     <size key="CommitChangelistDialog2.0.0.1366.768" width="672" height="719" />
     <size key="find.popup.0.0.1366.768" width="617" height="655" />
     <size key="GitCloneDialog.0.0.1366.768" width="596" height="209" />
-    <size key="GridCell.Tab.1.left.0.0.1366.768" width="1322" height="218" />
-    <size key="GridCell.Tab.1.center.0.0.1366.768" width="1322" height="218" />
-    <size key="GridCell.Tab.1.right.0.0.1366.768" width="1322" height="218" />
-    <size key="GridCell.Tab.1.bottom.0.0.1366.768" width="1322" height="218" />
+    <size key="GridCell.Tab.1.left.0.0.1366.768" width="1304" height="209" />
+    <size key="GridCell.Tab.1.center.0.0.1366.768" width="1304" height="209" />
+    <size key="GridCell.Tab.1.right.0.0.1366.768" width="1304" height="209" />
+    <size key="GridCell.Tab.1.bottom.0.0.1366.768" width="1304" height="209" />
     <size key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes.0.0.1366.768" width="470" height="275" />
   </component>
 </application>

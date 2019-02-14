@@ -10,16 +10,11 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_partner_list">
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/partners_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/partners_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/partners_list_item" />
-    </ScrollView>
+        android:layout_height="match_parent"
+        tools:listitem="@layout/partners_list_item" />
 
     <RelativeLayout
         android:id="@+id/empty_view"

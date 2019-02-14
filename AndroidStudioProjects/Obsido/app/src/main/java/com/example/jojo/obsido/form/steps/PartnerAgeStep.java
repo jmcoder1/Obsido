@@ -63,7 +63,7 @@ public class PartnerAgeStep extends Step<Integer> {
 
     @Override
     public Integer getStepData() {
-        return mNumberPicker.getValue();
+        return mPartnerAge;
     }
 
     @Override
@@ -76,13 +76,17 @@ public class PartnerAgeStep extends Step<Integer> {
     @Override
     protected void onStepOpened(boolean animated) {
         // This will be called automatically whenever the step gets opened.
+        Log.v(LOG_TAG, "onStepOpened: called");
+        mPartnerAge = mNumberPicker.getValue();
+        updateSubtitle(Integer.toString(mPartnerAge), false);
     }
 
     @Override
     protected void onStepClosed(boolean animated) {
         // This will be called automatically whenever the step gets closed.
         Log.v(LOG_TAG, "onStepClosed: called");
-        updateSubtitle(Integer.toString(mNumberPicker.getValue()), false);
+        mPartnerAge = mNumberPicker.getValue();
+        updateSubtitle(Integer.toString(mPartnerAge), false);
     }
 
     @Override
@@ -98,7 +102,11 @@ public class PartnerAgeStep extends Step<Integer> {
     @Override
     public void restoreStepData(Integer age) {
         // To restore the step after a configuration change
-        mNumberPicker.setValue(mPartnerAge);
+        mNumberPicker.setValue(age);
+        updateSubtitle(Integer.toString(age), false);
+        mNumberPicker.setSelectedTextColor(mNumberPicker.getSelectedTextColor());
+        markAsCompletedOrUncompleted(true);
+
     }
 
     @Override
