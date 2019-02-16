@@ -76,8 +76,8 @@
     <string name="shared_preferences_theme_changed">Applying changes</string>
 
     <!-- Strings for the title of the Stepper activity toa dd the partner [CHAR LIMIT = 20] -->
-    <string name="stepper_add_partner" translatable="true">Add a partner</string>
-    <string name="stepper_edit_partner" translatable="true">Edit</string>
+    <string name="stepper_add_partner" translatable="true">Add partner</string>
+    <string name="stepper_edit_partner" translatable="true">Edit Partner</string>
 
 
 

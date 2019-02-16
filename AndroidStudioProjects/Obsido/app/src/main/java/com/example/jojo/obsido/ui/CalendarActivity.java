@@ -55,14 +55,15 @@ public class CalendarActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setUpSharedPreference();
-        setContentView(R.layout.activity_calendar);
 
+        setContentView(R.layout.activity_calendar);
         super.onCreate(savedInstanceState);
 
         initFab();
         initToolbar();
         initDrawer();
         initCalendarView();
+        
         initEvents();
     }
 

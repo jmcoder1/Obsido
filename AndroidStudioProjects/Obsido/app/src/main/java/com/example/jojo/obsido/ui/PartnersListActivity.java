@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.example.jojo.obsido.Partner;
 import com.example.jojo.obsido.PartnerAdapter;
@@ -31,6 +32,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,47 +64,8 @@ public class PartnersListActivity extends AppCompatActivity implements
         initFab();
         initToolbar();
         initDrawer();
+        initRecyclerView();
 
-        RecyclerView partnerRecyclerView = findViewById(R.id.partners_list);
-        partnerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        partnerRecyclerView.setHasFixedSize(true);
-
-        final PartnerAdapter partnerAdapter = new PartnerAdapter();
-        partnerRecyclerView.setAdapter(partnerAdapter);
-
-        partnerViewModel = ViewModelProviders.of(this).get(PartnerViewModel.class);
-        partnerViewModel.getAllPartners().observe(this, new Observer<List<Partner>>() {
-            @Override
-            public void onChanged(@Nullable List<Partner> partners) {
-                partnerAdapter.submitList(partners);
-            }
-        });
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                                  RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                partnerViewModel.delete(partnerAdapter.getPartnerAt(viewHolder.getAdapterPosition()));
-            }
-        }).attachToRecyclerView(partnerRecyclerView);
-        partnerAdapter.setOnItemClickListener(new PartnerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Partner partner) {
-                Intent intent = new Intent(PartnersListActivity.this,
-                        AddEditProfileActivity.class);
-                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_NAME, partner.getName());
-                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_DESCRIPTION, partner.getDescription());
-                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_AGE, partner.getAge());
-                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_GENDER, partner.getGender());
-                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_ID, partner.getId());
-                startActivityForResult(intent, EDIT_PARTNER_REQUEST);
-            }
-        });
     }
 
     private void setUpSharedPreference() {
@@ -170,6 +133,60 @@ public class PartnersListActivity extends AppCompatActivity implements
         if (headerView != null) {
             headerView.setBackgroundColor(mColorPrimary);
         }
+    }
+
+    private void initRecyclerView() {
+        RecyclerView partnerRecyclerView = findViewById(R.id.partners_list);
+        RelativeLayout partnerEmptyView = findViewById(R.id.empty_view);
+        partnerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        partnerRecyclerView.setHasFixedSize(true);
+        partnerRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(),
+                DividerItemDecoration.VERTICAL));
+
+        final PartnerAdapter partnerAdapter = new PartnerAdapter();
+        partnerRecyclerView.setAdapter(partnerAdapter);
+
+        partnerViewModel = ViewModelProviders.of(this).get(PartnerViewModel.class);
+        partnerViewModel.getAllPartners().observe(this, new Observer<List<Partner>>() {
+            @Override
+            public void onChanged(@Nullable List<Partner> partners) {
+                partnerAdapter.submitList(partners);
+
+                if (partners.size() <= 0) {
+                    partnerRecyclerView.setVisibility(View.GONE);
+                    partnerEmptyView.setVisibility(View.VISIBLE);
+                } else {
+                    partnerRecyclerView.setVisibility(View.VISIBLE);
+                    partnerEmptyView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                partnerViewModel.delete(partnerAdapter.getPartnerAt(viewHolder.getAdapterPosition()));
+            }
+        }).attachToRecyclerView(partnerRecyclerView);
+        partnerAdapter.setOnItemClickListener(new PartnerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Partner partner) {
+                Intent intent = new Intent(PartnersListActivity.this,
+                        PartnerProfileActivity.class);
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_NAME, partner.getName());
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_DESCRIPTION, partner.getDescription());
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_AGE, partner.getAge());
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_GENDER, partner.getGender());
+                intent.putExtra(AddEditProfileActivity.EXTRA_PARTNER_ID, partner.getId());
+                startActivityForResult(intent, EDIT_PARTNER_REQUEST);
+            }
+        });
     }
 
     @Override

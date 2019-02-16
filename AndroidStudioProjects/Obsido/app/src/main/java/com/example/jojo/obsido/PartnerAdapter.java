@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PartnerAdapter extends ListAdapter<Partner, PartnerAdapter.PartnerHolder> {
     private OnItemClickListener listener;
@@ -25,7 +26,10 @@ public class PartnerAdapter extends ListAdapter<Partner, PartnerAdapter.PartnerH
 
         @Override
         public boolean areContentsTheSame(@NonNull Partner oldItem, @NonNull Partner newItem) {
-            return oldItem.getName().equals(newItem.getName());
+            return oldItem.getName().equals(newItem.getName()) &&
+                    oldItem.getDescription().equals(newItem.getDescription()) &&
+                    oldItem.getAge() == newItem.getAge() &&
+                    oldItem.getGender() == newItem.getGender();
         }
     };
 
@@ -40,8 +44,15 @@ public class PartnerAdapter extends ListAdapter<Partner, PartnerAdapter.PartnerH
     @Override
     public void onBindViewHolder(@NonNull PartnerHolder holder, int position) {
         Partner currentPartner = getItem(position);
-        holder.textViewName.setText(currentPartner.getName());
+        String currentPartnerName = currentPartner.getName();
+
+        holder.textViewName.setText(currentPartnerName);
         holder.textViewDescription.setText(currentPartner.getDescription());
+
+        // Handles what drawable to show
+        holder.circleImageViewImg.setVisibility(View.INVISIBLE);
+        holder.textViewImg.setVisibility(View.VISIBLE);
+        holder.textViewImg.setText(currentPartnerName.substring(0, 1).toUpperCase());
     }
 
     public Partner getPartnerAt(int position) {
@@ -51,11 +62,15 @@ public class PartnerAdapter extends ListAdapter<Partner, PartnerAdapter.PartnerH
     class PartnerHolder extends RecyclerView.ViewHolder {
         private TextView textViewName;
         private TextView textViewDescription;
+        private TextView textViewImg;
+        private CircleImageView circleImageViewImg;
 
         public PartnerHolder(View itemView) {
             super(itemView);
+            textViewImg = itemView.findViewById(R.id.partner_main_img_text_view);
             textViewName = itemView.findViewById(R.id.partner_name);
             textViewDescription = itemView.findViewById(R.id.partner_status);
+            circleImageViewImg = itemView.findViewById(R.id.partner_profile_img);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

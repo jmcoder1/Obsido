@@ -17,6 +17,18 @@
         android:layout_gravity="center_vertical"
         android:visibility="invisible"/>
 
+    <TextView
+        android:id="@+id/partner_main_img_text_view"
+        android:layout_width="@dimen/partner_profile_img_width"
+        android:layout_height="@dimen/partner_profile_img_height"
+        android:gravity="center"
+        android:background="@drawable/partner_profile_text_circle"
+        android:textColor="#ffffff"
+        android:textSize="32sp"
+        android:visibility="invisible"
+        tools:text="B"
+        tools:visibility="visible"/>
+
     <LinearLayout
         android:id="@+id/partner_text_info"
         android:layout_toEndOf="@id/partner_profile_img"
