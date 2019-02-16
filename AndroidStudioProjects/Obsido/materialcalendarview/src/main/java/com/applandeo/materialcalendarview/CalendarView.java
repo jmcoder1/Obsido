@@ -185,6 +185,7 @@ public class CalendarView extends LinearLayout {
 
     public void hideCalendarEvents() {
         List<ImageView> icons = mCalendarProperties.getEventDayIcons();
+        mCalendarProperties.setShowEventIcons(false);
         for(int i = 0; i < icons.size(); i++) {
             ImageView icon = icons.get(i);
             icon.setVisibility(INVISIBLE);
@@ -193,6 +194,7 @@ public class CalendarView extends LinearLayout {
 
     public void showCalendarEvents() {
         List<ImageView> icons = mCalendarProperties.getEventDayIcons();
+        mCalendarProperties.setShowEventIcons(true);
         for(int i = 0; i < icons.size(); i++) {
             ImageView icon = icons.get(i);
             icon.setVisibility(VISIBLE);

@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.os.Build;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.util.List;
@@ -34,6 +35,12 @@ public class ImageUtils {
         // Sets the image color
         if(calendarProperties.getEventIconColor() != 0) {
             setDrawableBackgroundColor(drawable, calendarProperties.getEventIconColor());
+        }
+
+        if(calendarProperties.getShowEventIcons()) {
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.INVISIBLE);
         }
 
         imageView.setImageDrawable(drawable);

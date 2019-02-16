@@ -39,6 +39,7 @@ public class CalendarProperties {
             mWeekDayLabelColor, mItemLayoutResource, mAnotherMonthsDaysLabelsColor;
 
     private boolean mEventsEnabled;
+    private boolean mShowEventIcons = true;
 
     private Calendar mFirstPageCalendarDate = DateUtils.getCalendar();
     private Calendar mCalendar, mMinimumDate, mMaximumDate;
@@ -54,6 +55,7 @@ public class CalendarProperties {
     private List<SelectedDay> mSelectedDays = new ArrayList<>();
     private List<Calendar> mEventCalendarDays = new ArrayList<>();
     private List<ImageView> mEventDayIcons = new ArrayList<>();
+
 
     private Context mContext;
 
@@ -81,6 +83,14 @@ public class CalendarProperties {
 
     public void setEventsEnabled(boolean eventsEnabled) {
         mEventsEnabled = eventsEnabled;
+    }
+
+    public void setShowEventIcons(boolean showEventIcons) {
+        mShowEventIcons = showEventIcons;
+    }
+
+    public boolean getShowEventIcons() {
+        return mShowEventIcons;
     }
 
     public void setEventCalendarDays(List<Calendar> eventCalendarDays) {

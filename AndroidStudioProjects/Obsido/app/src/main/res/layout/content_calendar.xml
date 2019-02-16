@@ -6,16 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.CalendarActivity"
-    tools:showIn="@layout/app_bar_calendar">
+    tools:context=".ui.CalendarActivity">
 
-    <com.applandeo.materialcalendarview.CalendarView
-        android:id="@+id/calendarView"
+    <FrameLayout
+        android:id="@+id/calendar_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:selectedDayColor="@color/colorPrimary"
-        app:todayDayColor="@color/colorAccent"
-        app:eventDayColor="@color/colorPrimary"
-        app:weekDayBarColor="@color/colorPrimary"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/appBar"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add"
+        android:tintMode="@color/weekDayLabelColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.transition.Visibility;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,11 +21,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.agrawalsuneet.loaderspack.loaders.MultipleRippleLoader;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
 
+import com.example.jojo.obsido.CalendarFragment;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -44,8 +48,6 @@ public class CalendarActivity extends AppCompatActivity implements
     // UI XML Views
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
-    private CalendarView mCalendarView;
-    private boolean mEventsHidden = false;
 
     // Theme colors
     private int mColorPrimary;
@@ -62,9 +64,19 @@ public class CalendarActivity extends AppCompatActivity implements
         initFab();
         initToolbar();
         initDrawer();
-        initCalendarView();
-        
-        initEvents();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        CalendarFragment calendarFragment = new CalendarFragment();
+        calendarFragment.setColorPrimary(mColorPrimary);
+        calendarFragment.setColorPrimaryDark(mColorPrimaryDark);
+        calendarFragment.setColorPrimaryAccent(mColorPrimaryAccent);
+
+        fragmentManager.beginTransaction()
+                .add(R.id.calendar_container, calendarFragment)
+                .commit();
+
+
     }
 
     private void setUpSharedPreference() {
@@ -103,14 +115,6 @@ public class CalendarActivity extends AppCompatActivity implements
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-
-        if (getSupportActionBar() != null) {
-            try {
-                getSupportActionBar().setTitle(mCalendarView.getCalendarTitleDate());
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void initFab() {
@@ -142,64 +146,6 @@ public class CalendarActivity extends AppCompatActivity implements
         }
     }
 
-    private void initCalendarView() {
-        mCalendarView = findViewById(R.id.calendarView);
-
-        mCalendarView.setOnPreviousPageChangeListener(new OnCalendarPageChangeListener() {
-            @Override
-            public void onChange() {
-                Log.v(LOG_TAG, "initCalendarView: calendarView moved backwards");
-                if(getSupportActionBar() != null) {
-                    try {
-                        getSupportActionBar().setTitle(mCalendarView.getCalendarTitleDate());
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        mCalendarView.setOnForwardPageChangeListener(new OnCalendarPageChangeListener() {
-            @Override
-            public void onChange() {
-                Log.v(LOG_TAG, "initCalendarView: calendarView moved forward");
-                if(getSupportActionBar() != null) {
-                    try {
-                        getSupportActionBar().setTitle(mCalendarView.getCalendarTitleDate());
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        // Changes the Calendar View colors
-        if (mCalendarView != null) {
-            mCalendarView.setSelectionColor(mColorPrimary);
-            mCalendarView.setEventDayColor(mColorPrimary);
-            mCalendarView.setWeekDayBarColor(mColorPrimary);
-            mCalendarView.setTodayColor(mColorPrimaryAccent);
-            mCalendarView.setEventIconColor(mColorPrimaryDark);
-        }
-    }
-
-    private void initEvents() {
-        List<EventDay> eventDays = new ArrayList<>();
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(Calendar.DAY_OF_MONTH, 12);
-
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(Calendar.DAY_OF_MONTH, 16);
-
-        Drawable draw = getResources().getDrawable(R.drawable.test_event);
-
-        eventDays.add(new EventDay(calendar1, draw));
-        eventDays.add(new EventDay(calendar2, draw));
-
-        mCalendarView.setEvents(eventDays);
-        Log.v(LOG_TAG, "onCreate: number of events added" + eventDays.size());
-    }
-
     @Override
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
@@ -221,22 +167,10 @@ public class CalendarActivity extends AppCompatActivity implements
 
         switch (item.getItemId()) {
             case R.id.action_calendar_today:
-                Log.v(LOG_TAG, "onOptionsItemSelected: clicked the calendar today icon.");
-                setCalendarToday();
-                return true;
+                return  false;
 
             case R.id.action_hide_events:
-                Log.v(LOG_TAG, "onOptionsItemSelected: clicked the hide events tab.");
-                if(mEventsHidden) {
-                    mCalendarView.showCalendarEvents();
-                    item.setTitle(R.string.action_hide_events);
-                    mEventsHidden = false;
-                } else {
-                    mCalendarView.hideCalendarEvents();
-                    item.setTitle(R.string.action_show_events);
-                    mEventsHidden = true;
-                }
-                return true;
+                return false;
 
             case R.id.action_settings:
                 Log.v(LOG_TAG, "onOptionsItemSelected:: opened Settings activity");
@@ -245,16 +179,6 @@ public class CalendarActivity extends AppCompatActivity implements
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void setCalendarToday() {
-        Calendar calToday = Calendar.getInstance();
-
-        try {
-            mCalendarView.setDate(calToday);
-        } catch(OutOfDateRangeException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
