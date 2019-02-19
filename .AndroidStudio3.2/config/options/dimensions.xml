@@ -12,7 +12,7 @@
     <location key="AndroidCreateResourceDirectoryDialog.0.0.1366.768" x="0" y="120" />
     <location key="AndroidCreateResourceFileDialog.0.0.1366.768" x="210" y="123" />
     <location key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog.0.0.1366.768" x="677" y="112" />
-    <location key="#com.intellij.ide.util.MemberChooser.0.0.1366.768" x="835" y="71" />
+    <location key="#com.intellij.ide.util.MemberChooser.0.0.1366.768" x="716" y="92" />
     <location key="#com.intellij.refactoring.rename.AutomaticRenamingDialog.0.0.1366.768" x="283" y="0" />
     <location key="find.popup.0.0.1366.768" x="749" y="73" />
     <location key="Github.ShareDialog.0.0.1366.768" x="475" y="241" />
@@ -28,6 +28,7 @@
     <location key="#CPU_Recording_Configurations.0.0.1366.768" x="137" y="20" />
     <location key="git4idea.ui.GitResetDialog.0.0.1366.768" x="497" y="269" />
     <location key="RollbackChangesDialog.0.0.1366.768" x="363" y="77" />
+    <location key="IdeErrosDialog.0.0.1366.768" x="312" y="207" />
     <size key="ProcessPopupWindow.0.0.1366.768" width="400" height="190" />
     <size key="GridCell.Tab.0.left.0.0.1366.768" width="0" height="0" />
     <size key="GridCell.Tab.0.center.0.0.1366.768" width="0" height="0" />
@@ -41,5 +42,6 @@
     <size key="GridCell.Tab.1.right.0.0.1366.768" width="1304" height="209" />
     <size key="GridCell.Tab.1.bottom.0.0.1366.768" width="1304" height="209" />
     <size key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes.0.0.1366.768" width="470" height="275" />
+    <size key="javadoc.popup.new.0.0.1366.768" width="411" height="59" />
   </component>
 </application>

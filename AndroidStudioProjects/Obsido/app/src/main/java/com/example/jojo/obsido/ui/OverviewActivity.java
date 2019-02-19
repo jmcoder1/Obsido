@@ -108,10 +108,6 @@ public class OverviewActivity extends AppCompatActivity implements
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View headerView = navigationView.getHeaderView(0);
-        if (headerView != null) {
-            headerView.setBackgroundColor(mColorPrimary);
-        }
     }
 
     @Override

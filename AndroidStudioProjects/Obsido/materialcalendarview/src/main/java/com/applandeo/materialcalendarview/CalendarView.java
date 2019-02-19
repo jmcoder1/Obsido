@@ -138,7 +138,7 @@ public class CalendarView extends LinearLayout {
         mCalendarProperties.setEventDayColor(eventDayColor);
 
         int eventIconColor = typedArray.getColor(R.styleable.CalendarView_eventIconColor, 0);
-        mCalendarProperties.setEventDayColor(eventIconColor);
+        mCalendarProperties.setEventIconColor(eventIconColor);
 
         int disabledDaysLabelsColor = typedArray.getColor(R.styleable.CalendarView_disabledDaysLabelsColor, 0);
         mCalendarProperties.setDisabledDaysLabelsColor(disabledDaysLabelsColor);

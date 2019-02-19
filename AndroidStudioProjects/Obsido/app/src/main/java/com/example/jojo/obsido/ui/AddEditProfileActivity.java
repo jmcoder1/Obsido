@@ -42,7 +42,6 @@ public class AddEditProfileActivity extends AppCompatActivity implements Stepper
             "com.example.jojo.obsido.EXTRA_PARTNER_AGE";
 
     // Vertical Stepper form elements
-    private VerticalStepperFormView verticalStepperForm;
     private PartnerNameStep mPartnerNameStep;
     private PartnerDescriptionStep mPartnerDescriptionStep;
     private PartnerGenderStep mPartnerGenderStep;
@@ -158,20 +157,12 @@ public class AddEditProfileActivity extends AppCompatActivity implements Stepper
 
     private void initVerticalStepper() {
         Log.v(LOG_TAG, "loadVerticalStepperSharedPreferences: called.");
-        verticalStepperForm = findViewById(R.id.stepper_form);
+        VerticalStepperFormView verticalStepperForm = findViewById(R.id.stepper_form);
         verticalStepperForm
                 .setup(this, mPartnerNameStep, mPartnerDescriptionStep, mPartnerAgeStep, mPartnerGenderStep)
                 .stepNumberColors(mColorPrimary,
                         getResources().getColor(R.color.verticalStepperTextColor))
-                .nextButtonColors(mColorPrimary, mColorPrimaryDark,
-                        getResources().getColor(R.color.verticalStepperTextColor),
-                        getResources().getColor(R.color.verticalStepperTextColor))
-                .errorMessageTextColor(mColorPrimaryDark)
                 .init();
-
-
-        mPartnerAgeStep.setAgePickerDividerColor(mColorPrimary);
-        mPartnerAgeStep.setAgePickerSelectedTextColor(mColorPrimary);
 
         mPartnerGenderStep.setPrimaryColor(mColorPrimary);
 

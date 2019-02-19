@@ -27,6 +27,11 @@
         android:layout_height="match_parent"
         android:layout_below="@id/appBar"
         app:form_display_bottom_navigation="false"
+        app:form_error_message_text_color="?attr/colorPrimary"
+        app:form_next_button_background_color="?attr/colorPrimary"
+        app:form_next_button_pressed_background_color="?attr/colorPrimaryDark"
+        app:form_next_button_text_color="@color/verticalStepperTextColor"
+        app:form_next_button_pressed_text_color="@color/verticalStepperTextColor"
         app:form_next_button_text="@string/stepper_add_partner_next_button"
         app:form_last_button_text="@string/stepper_add_partner_last_button"/>
 

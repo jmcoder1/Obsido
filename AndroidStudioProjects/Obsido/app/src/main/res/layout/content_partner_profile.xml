@@ -9,14 +9,20 @@
     tools:context=".ui.PartnerProfileActivity"
     tools:showIn="@layout/app_bar_partner_profile">
 
-    <TextView
-        android:id="@+id/centreText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Overview Activity!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <FrameLayout
+        android:id="@+id/partner_profile_top_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".5"
+        app:layout_constraintTop_toBottomOf="@id/appBar"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent=".5"
+        app:layout_constraintTop_toBottomOf="@id/partner_profile_top_container"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

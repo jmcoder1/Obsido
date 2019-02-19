@@ -31,7 +31,7 @@
         app:multipleripple_animDuration="6000"
         android:visibility="invisible"
         android:layout_gravity="center"
-        app:multipleripple_circleColor="@color/colorPrimary"
+        app:multipleripple_circleColor="?attr/colorPrimary"
         app:multipleripple_circleInitialRadius="20dp"
         app:multipleripple_fromAlpha="0.8"
         app:multipleripple_interpolator="@android:anim/decelerate_interpolator"

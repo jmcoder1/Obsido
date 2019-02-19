@@ -12,22 +12,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.transition.Visibility;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.agrawalsuneet.loaderspack.loaders.MultipleRippleLoader;
-import com.applandeo.materialcalendarview.CalendarView;
-import com.applandeo.materialcalendarview.EventDay;
-import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
-import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
-
-import com.example.jojo.obsido.CalendarFragment;
+import com.example.jojo.obsido.fragments.CalendarFragment;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -36,9 +28,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.example.jojo.obsido.R;
 
 import com.example.jojo.obsido.SettingsActivity;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Calendar;
 
 public class CalendarActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -68,14 +57,10 @@ public class CalendarActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         CalendarFragment calendarFragment = new CalendarFragment();
-        calendarFragment.setColorPrimary(mColorPrimary);
-        calendarFragment.setColorPrimaryDark(mColorPrimaryDark);
-        calendarFragment.setColorPrimaryAccent(mColorPrimaryAccent);
 
         fragmentManager.beginTransaction()
                 .add(R.id.calendar_container, calendarFragment)
                 .commit();
-
 
     }
 
@@ -139,11 +124,6 @@ public class CalendarActivity extends AppCompatActivity implements
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View headerView = navigationView.getHeaderView(0);
-
-        if (headerView != null) {
-            headerView.setBackgroundColor(mColorPrimary);
-        }
     }
 
     @Override

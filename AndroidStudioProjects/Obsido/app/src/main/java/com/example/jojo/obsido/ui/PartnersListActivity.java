@@ -99,6 +99,7 @@ public class PartnersListActivity extends AppCompatActivity implements
         // Gets the values from the activity theme
         mColorPrimary = SharedPreferenceUtils.getColorPrimary(getTheme());
         mColorPrimaryAccent = SharedPreferenceUtils.getColorAccent(getTheme());
+
     }
 
     private void initFab() {
@@ -129,10 +130,6 @@ public class PartnersListActivity extends AppCompatActivity implements
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View headerView = navigationView.getHeaderView(0);
-        if (headerView != null) {
-            headerView.setBackgroundColor(mColorPrimary);
-        }
     }
 
     private void initRecyclerView() {

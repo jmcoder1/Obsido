@@ -1,4 +1,4 @@
-package com.example.jojo.obsido;
+package com.example.jojo.obsido.fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
+import com.example.jojo.obsido.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,8 +29,6 @@ public class CalendarFragment extends Fragment {
     private boolean mEventsHidden = false;
 
     private Toolbar mToolbar;
-
-    private int mColorPrimary, mColorPrimaryDark, mColorPrimaryAccent;
 
     public CalendarFragment() {
 
@@ -69,7 +68,9 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
         View rootViewCalendar = inflater.inflate(R.layout.fragment_calendar, container, false);
+
         mCalendarView = rootViewCalendar.findViewById(R.id.calendarView);
         mToolbar = getActivity().findViewById(R.id.toolbar);
 
@@ -104,15 +105,6 @@ public class CalendarFragment extends Fragment {
                 }
             }
         });
-
-        // Changes the Calendar View colors
-        if (mCalendarView != null) {
-            mCalendarView.setSelectionColor(mColorPrimary);
-            mCalendarView.setEventDayColor(mColorPrimary);
-            mCalendarView.setWeekDayBarColor(mColorPrimary);
-            mCalendarView.setTodayColor(mColorPrimaryAccent);
-            mCalendarView.setEventIconColor(mColorPrimaryDark);
-        }
 
         if (mToolbar != null) {
             try {
@@ -149,15 +141,4 @@ public class CalendarFragment extends Fragment {
         }
     }
 
-    public void setColorPrimary(int colorPrimary) {
-        mColorPrimary = colorPrimary;
-    }
-
-    public void setColorPrimaryDark(int colorPrimaryDark) {
-        mColorPrimaryDark = colorPrimaryDark;
-    }
-
-    public void setColorPrimaryAccent(int colorPrimaryAccent) {
-        mColorPrimaryAccent = colorPrimaryAccent;
-    }
 }

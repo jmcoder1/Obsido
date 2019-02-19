@@ -10,6 +10,8 @@
         android:id="@+id/age_number_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:np_dividerColor="?attr/colorPrimary"
+        app:np_selectedTextColor="?attr/colorPrimary"
         app:np_orientation="horizontal"
         app:np_selectedTextSize="36sp"
         app:np_dividerDistance="44sp"
