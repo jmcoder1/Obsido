@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ernestoyaquello.com.verticalstepperform.VerticalStepperFormView
+        android:id="@+id/stepper_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appBar"
+        app:form_display_bottom_navigation="false"
+        app:form_error_message_text_color="?attr/colorPrimary"
+        app:form_next_button_background_color="?attr/colorPrimary"
+        app:form_next_button_pressed_background_color="?attr/colorPrimaryDark"
+        app:form_next_button_text_color="@color/verticalStepperTextColor"
+        app:form_next_button_pressed_text_color="@color/verticalStepperTextColor"
+        app:form_next_button_text="@string/stepper_add_partner_next_button"
+        app:form_last_button_text="@string/stepper_add_partner_last_button"/>
+
+</RelativeLayout>
