@@ -24,6 +24,12 @@
         <activity
             android:name=".ui.CalendarActivity"
             android:hardwareAccelerated="true">
+
+        </activity>
+
+        <activity
+            android:name=".ui.AddEditEventActivity"
+            android:parentActivityName=".ui.CalendarActivity">
         </activity>
 
         <activity

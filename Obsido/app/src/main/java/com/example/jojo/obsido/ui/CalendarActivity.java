@@ -34,13 +34,16 @@ public class CalendarActivity extends AppCompatActivity implements
 
     private static final String LOG_TAG = "CalendarActivity".getClass().getSimpleName();
 
+    private FragmentManager fragmentManager;
+
+    public static final int ADD_PARTNER_REQUEST = 1;
+    public static final int EDIT_PARTNER_REQUEST = 2;
+
     // UI XML Views
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
 
     // Theme colors
-    private int mColorPrimary;
-    private int mColorPrimaryDark;
     private int mColorPrimaryAccent;
 
     @Override
@@ -54,12 +57,9 @@ public class CalendarActivity extends AppCompatActivity implements
         initToolbar();
         initDrawer();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        CalendarFragment calendarFragment = new CalendarFragment();
-
+        fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.calendar_container, calendarFragment)
+                .add(R.id.calendar_container, new CalendarFragment())
                 .commit();
 
     }
@@ -92,9 +92,7 @@ public class CalendarActivity extends AppCompatActivity implements
             }
         }
 
-        mColorPrimary = SharedPreferenceUtils.getColorPrimary(getTheme());
         mColorPrimaryAccent = SharedPreferenceUtils.getColorAccent(getTheme());
-        mColorPrimaryDark = SharedPreferenceUtils.getColorPrimaryDark(getTheme());
     }
 
     private void initToolbar() {
@@ -107,8 +105,8 @@ public class CalendarActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Calendar View activity FAB", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent calendarEventIntent = new Intent(CalendarActivity.this, AddEditEventActivity.class);
+                startActivityForResult(calendarEventIntent, ADD_PARTNER_REQUEST);
             }
         });
 
