@@ -3,13 +3,11 @@ package com.example.jojo.obsido.ui;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.jojo.obsido.AppDatabase;
 import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.form.steps.PartnerAgeStep;
 import com.example.jojo.obsido.form.steps.PartnerDescriptionStep;

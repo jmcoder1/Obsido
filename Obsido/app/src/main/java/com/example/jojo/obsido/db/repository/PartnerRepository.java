@@ -1,7 +1,11 @@
-package com.example.jojo.obsido;
+package com.example.jojo.obsido.db.repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
+
+import com.example.jojo.obsido.PartnerDatabase;
+import com.example.jojo.obsido.db.Partner;
+import com.example.jojo.obsido.db.dao.PartnerDao;
 
 import java.util.List;
 
@@ -13,7 +17,7 @@ public class PartnerRepository {
     private LiveData<List<Partner>> allPartners;
 
     public PartnerRepository(Application application) {
-        AppDatabase db = AppDatabase.getInstance(application);
+        PartnerDatabase db = PartnerDatabase.getInstance(application);
         partnerDao = db.partnerDao();
         allPartners = partnerDao.getAllPartners();
     }

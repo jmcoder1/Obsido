@@ -1,4 +1,6 @@
-package com.example.jojo.obsido;
+package com.example.jojo.obsido.db.dao;
+
+import com.example.jojo.obsido.db.Partner;
 
 import java.util.List;
 

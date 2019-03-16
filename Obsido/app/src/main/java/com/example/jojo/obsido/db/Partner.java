@@ -1,4 +1,4 @@
-package com.example.jojo.obsido;
+package com.example.jojo.obsido.db;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -36,6 +36,7 @@ public class Partner {
     public int getId() {
         return id;
     }
+
     public void setName(String name) {
         this.name = name;
     }

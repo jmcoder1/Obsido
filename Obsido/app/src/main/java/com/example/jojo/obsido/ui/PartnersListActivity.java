@@ -10,9 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.example.jojo.obsido.Partner;
+import com.example.jojo.obsido.db.Partner;
 import com.example.jojo.obsido.PartnerAdapter;
-import com.example.jojo.obsido.PartnerViewModel;
+import com.example.jojo.obsido.db.PartnerViewModel;
 import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.SettingsActivity;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;

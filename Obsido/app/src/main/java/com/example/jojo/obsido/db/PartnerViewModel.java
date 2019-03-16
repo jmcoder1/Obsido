@@ -1,6 +1,8 @@
-package com.example.jojo.obsido;
+package com.example.jojo.obsido.db;
 
 import android.app.Application;
+
+import com.example.jojo.obsido.db.repository.PartnerRepository;
 
 import java.util.List;
 
