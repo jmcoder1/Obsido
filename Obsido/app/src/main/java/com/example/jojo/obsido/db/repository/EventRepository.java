@@ -3,8 +3,7 @@ package com.example.jojo.obsido.db.repository;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import com.example.jojo.obsido.EventDatabase;
-import com.example.jojo.obsido.PartnerDatabase;
+import com.example.jojo.obsido.db.EventDatabase;
 import com.example.jojo.obsido.db.Event;
 import com.example.jojo.obsido.db.dao.EventDao;
 

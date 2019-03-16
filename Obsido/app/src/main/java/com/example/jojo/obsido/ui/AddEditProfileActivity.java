@@ -54,7 +54,7 @@ public class AddEditProfileActivity extends AppCompatActivity implements Stepper
         setUpSharedPreference();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stepper_form);
+        setContentView(R.layout.activity_partner_stepper_form);
 
         initToolbar();
 
@@ -75,6 +75,7 @@ public class AddEditProfileActivity extends AppCompatActivity implements Stepper
             setTitle(R.string.stepper_add_partner);
         } else {
             setTitle(R .string.stepper_edit_partner);
+
             mPartnerNameStep.restoreStepData(intent.getStringExtra(EXTRA_PARTNER_NAME));
             mPartnerDescriptionStep.restoreStepData(intent.getStringExtra(EXTRA_PARTNER_DESCRIPTION));
             mPartnerAgeStep.restoreStepData(intent.getIntExtra(EXTRA_PARTNER_AGE, 0));

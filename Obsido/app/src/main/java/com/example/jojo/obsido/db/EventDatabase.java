@@ -1,10 +1,10 @@
-package com.example.jojo.obsido;
+package com.example.jojo.obsido.db;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.example.jojo.obsido.db.Partner;
-import com.example.jojo.obsido.db.dao.PartnerDao;
+import com.example.jojo.obsido.utils.DateTypeConverterUtils;
+import com.example.jojo.obsido.db.dao.EventDao;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -13,20 +13,20 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Partner.class}, version = 2, exportSchema = false)
-@TypeConverters(DateTypeConverter.class)
-public abstract class PartnerDatabase extends RoomDatabase {
+@Database(entities = {Event.class}, version = 1, exportSchema = false)
+@TypeConverters(DateTypeConverterUtils.class)
+public abstract class EventDatabase extends RoomDatabase {
 
-    private static PartnerDatabase instance;
+    private static EventDatabase instance;
 
-    public static String DATABASE_NAME = "PartnerDb";
+    public static String DATABASE_NAME = "EventDb";
 
-    public abstract PartnerDao partnerDao();
+    public abstract EventDao eventDao();
 
-    public static synchronized PartnerDatabase getInstance(Context context) {
+    public static synchronized EventDatabase getInstance(Context context) {
         if(instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    PartnerDatabase.class,
+                    EventDatabase.class,
                     DATABASE_NAME)
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
@@ -36,7 +36,7 @@ public abstract class PartnerDatabase extends RoomDatabase {
         return instance;
     }
 
-    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
+    private static Callback roomCallback = new Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -45,10 +45,10 @@ public abstract class PartnerDatabase extends RoomDatabase {
     };
 
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
-        private PartnerDao partnerDao;
+        private EventDao eventDao;
 
-        private PopulateDbAsyncTask(PartnerDatabase db) {
-            partnerDao = db.partnerDao();
+        private PopulateDbAsyncTask(EventDatabase db) {
+            eventDao = db.eventDao();
         }
 
         @Override

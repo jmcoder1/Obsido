@@ -9,15 +9,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.jojo.obsido.R;
+import com.example.jojo.obsido.form.steps.EventCommentsStep;
+import com.example.jojo.obsido.form.steps.PartnerDescriptionStep;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;
+
+import org.w3c.dom.Comment;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.preference.PreferenceManager;
+import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
+import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 
-public class AddEditEventActivity extends AppCompatActivity  {
+public class AddEditEventActivity extends AppCompatActivity implements StepperFormListener {
 
     private static final String LOG_TAG = "AddEditEventActivity".getClass().getSimpleName();
 
@@ -32,21 +38,35 @@ public class AddEditEventActivity extends AppCompatActivity  {
     public static final String EXTRA_EVENT_COMMENTS =
             "com.example.jojo.obsido.EXTRA_EVENT_COMMENTS";
 
+    // Vertical Stepper form element
+    private EventCommentsStep mEventCommentsStep;
+
+    // Shared Preferences Theme color values
+    private int mColorPrimary;
+    private int mColorPrimaryDark;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setUpSharedPreference();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_overview);
+        setContentView(R.layout.activity_event_stepper_form);
 
         initToolbar();
+
+        mEventCommentsStep = new EventCommentsStep(getResources()
+                .getString(R.string.stepper_add_event_comments), getApplicationContext());
+
+        initVerticalStepper();
 
         Intent intent = getIntent();
 
         if(!intent.hasExtra(EXTRA_EVENT_ID)) {
-            // setTitle(R.string.stepper_add_partner);
+            setTitle(R.string.stepper_add_event);
         } else {
-            // setTitle(R.string.stepper_edit_partner);
+            setTitle(R.string.stepper_edit_event);
+
+            mEventCommentsStep.restoreStepData(intent.getStringExtra(EXTRA_EVENT_COMMENTS));
         }
     }
 
@@ -81,26 +101,57 @@ public class AddEditEventActivity extends AppCompatActivity  {
                 e.printStackTrace();
             }
         }
+
+        mColorPrimary = SharedPreferenceUtils.getColorPrimary(getTheme());
+        mColorPrimaryDark = SharedPreferenceUtils.getColorPrimaryDark(getTheme());
     }
 
-    private void savePartner() {
-        /*String partnerName = mPartnerNameStep.getStepData();
-        String partnerDescription = mPartnerDescriptionStep.getStepData();
-        String partnerAge = mPartnerAgeStep.getStepDataAsHumanReadableString();
-        String partnerGender = Integer.toString(mPartnerGenderStep.getStepData());
+    private void saveEvent() {
+        //String partnerName = mPartnerNameStep.getStepData();
+        String eventComments = mEventCommentsStep.getStepData();
+        //String partnerAge = mPartnerAgeStep.getStepDataAsHumanReadableString();
+        //String partnerGender = Integer.toString(mPartnerGenderStep.getStepData());
 
         Intent data = new Intent();
-        data.putExtra(EXTRA_PARTNER_NAME, partnerName);
-        data.putExtra(EXTRA_PARTNER_DESCRIPTION, partnerDescription);
-        data.putExtra(EXTRA_PARTNER_AGE, Integer.parseInt(partnerAge));
-        data.putExtra(EXTRA_PARTNER_GENDER, Integer.parseInt(partnerGender));
+        //data.putExtra(EXTRA_PARTNER_NAME, partnerName);
+        data.putExtra(EXTRA_EVENT_COMMENTS, eventComments);
+        //data.putExtra(EXTRA_PARTNER_AGE, Integer.parseInt(partnerAge));
+        //data.putExtra(EXTRA_PARTNER_GENDER, Integer.parseInt(partnerGender));
 
-        int id = getIntent().getIntExtra(EXTRA_PARTNER_ID, -1);
+        int id = getIntent().getIntExtra(EXTRA_EVENT_ID, -1);
         if(id != -1) {
-            data.putExtra(EXTRA_PARTNER_ID, id);
+            data.putExtra(EXTRA_EVENT_ID, id);
         }
         setResult(RESULT_OK, data);
-        finish();*/
+        finish();
+    }
+
+    @Override
+    public void onCompletedForm() {
+        // This method will be called when the user clicks on the last confirmation button of the
+        // form in an attempt to save or send the data.
+        Log.v(LOG_TAG, "onCompletedForm: vertical stepper form completed.");
+        saveEvent();
+    }
+
+    @Override
+    public void onCancelledForm() {
+        // This method will be called when the user clicks on the cancel button of the form.
+        Log.v(LOG_TAG, "onCancelledForm: vertical stepper form cancelled.");
+
+    }
+
+    private void initVerticalStepper() {
+        Log.v(LOG_TAG, "loadVerticalStepperSharedPreferences: called.");
+        VerticalStepperFormView verticalStepperForm = findViewById(R.id.stepper_form);
+        verticalStepperForm
+                .setup(this, mEventCommentsStep)
+                .stepNumberColors(mColorPrimary,
+                        getResources().getColor(R.color.verticalStepperTextColor))
+                .init();
+
+        //mPartnerGenderStep.setPrimaryColor(mColorPrimary);
+
     }
 
     @Override

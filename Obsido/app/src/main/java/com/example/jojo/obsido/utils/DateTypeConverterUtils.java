@@ -1,10 +1,10 @@
-package com.example.jojo.obsido;
+package com.example.jojo.obsido.utils;
 
 import java.util.Date;
 
 import androidx.room.TypeConverter;
 
-public class DateTypeConverter {
+public class DateTypeConverterUtils {
     @TypeConverter
     public static Date fromTimestamp(Long value) {
         return value == null ? null : new Date(value);

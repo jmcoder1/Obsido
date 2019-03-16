@@ -1,6 +1,6 @@
 package com.example.jojo.obsido.db;
 
-import com.example.jojo.obsido.DateTypeConverter;
+import com.example.jojo.obsido.utils.DateTypeConverterUtils;
 
 import java.util.Date;
 
@@ -16,7 +16,7 @@ public class Event {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @TypeConverters({DateTypeConverter.class})
+    @TypeConverters({DateTypeConverterUtils.class})
     @ColumnInfo(name = "event_date")
     @NonNull
     private Date date;
