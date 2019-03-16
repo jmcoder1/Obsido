@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
     <RelativeLayout
@@ -19,8 +20,9 @@
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_gender_male"
-                android:clickable="true"/>
+                app:srcCompat="@drawable/ic_gender_male"
+                android:clickable="true"
+                android:focusable="true"/>
 
             <TextView
                 android:id="@+id/maleGenderLabel"
@@ -44,7 +46,7 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_gender_female"
+                    app:srcCompat="@drawable/ic_gender_female"
                     android:clickable="true"
                     android:focusable="true" />
 

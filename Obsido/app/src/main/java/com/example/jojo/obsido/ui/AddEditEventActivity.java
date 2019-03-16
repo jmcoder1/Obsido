@@ -10,10 +10,8 @@ import android.view.MenuItem;
 
 import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.form.steps.EventCommentsStep;
-import com.example.jojo.obsido.form.steps.PartnerDescriptionStep;
+import com.example.jojo.obsido.form.steps.EventDateStep;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;
-
-import org.w3c.dom.Comment;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +38,7 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
 
     // Vertical Stepper form element
     private EventCommentsStep mEventCommentsStep;
+    private EventDateStep mEventDateStep;
 
     // Shared Preferences Theme color values
     private int mColorPrimary;
@@ -54,6 +53,8 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
 
         initToolbar();
 
+        mEventDateStep = new EventDateStep(getResources()
+                .getString(R.string.stepper_add_event_date), getApplicationContext());
         mEventCommentsStep = new EventCommentsStep(getResources()
                 .getString(R.string.stepper_add_event_comments), getApplicationContext());
 
@@ -107,13 +108,13 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
     }
 
     private void saveEvent() {
-        //String partnerName = mPartnerNameStep.getStepData();
+        String eventDate = mEventDateStep.getStepDataAsHumanReadableString();
         String eventComments = mEventCommentsStep.getStepData();
         //String partnerAge = mPartnerAgeStep.getStepDataAsHumanReadableString();
         //String partnerGender = Integer.toString(mPartnerGenderStep.getStepData());
 
         Intent data = new Intent();
-        //data.putExtra(EXTRA_PARTNER_NAME, partnerName);
+        data.putExtra(EXTRA_EVENT_DATE, eventDate);
         data.putExtra(EXTRA_EVENT_COMMENTS, eventComments);
         //data.putExtra(EXTRA_PARTNER_AGE, Integer.parseInt(partnerAge));
         //data.putExtra(EXTRA_PARTNER_GENDER, Integer.parseInt(partnerGender));
@@ -145,13 +146,10 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
         Log.v(LOG_TAG, "loadVerticalStepperSharedPreferences: called.");
         VerticalStepperFormView verticalStepperForm = findViewById(R.id.stepper_form);
         verticalStepperForm
-                .setup(this, mEventCommentsStep)
+                .setup(this, mEventDateStep, mEventCommentsStep)
                 .stepNumberColors(mColorPrimary,
                         getResources().getColor(R.color.verticalStepperTextColor))
                 .init();
-
-        //mPartnerGenderStep.setPrimaryColor(mColorPrimary);
-
     }
 
     @Override

@@ -68,7 +68,7 @@
 
     <!-- Strings for the Vertical Stepper to add a new event -->
     <string name="stepper_add_event_comments" translatable="true">Comments</string>
-
+    <string name="stepper_add_event_date" translatable="true">Date</string>
 
     <!-- Strings for the Vertical Stepper to move onto the next step -->
     <string name="stepper_add_partner_next_button">Next</string>

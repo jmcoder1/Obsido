@@ -33,7 +33,7 @@ public class PartnerAgeStep extends Step<Integer> {
 
         // We create this step view by inflating an XML layout
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View ageStepContent = inflater.inflate(R.layout.step_age_layout, null, false);
+        View ageStepContent = inflater.inflate(R.layout.step_partner_age_layout, null, false);
         mNumberPicker = ageStepContent.findViewById(R.id.age_number_picker);
         setupPartnerAge();
 
@@ -69,8 +69,7 @@ public class PartnerAgeStep extends Step<Integer> {
     @Override
     public String getStepDataAsHumanReadableString() {
         // This string will be displayed in the subtitle of the step whenever the step gets closed.
-        String partnerAge = Integer.toString(mNumberPicker.getValue());
-        return partnerAge;
+        return Integer.toString(mNumberPicker.getValue());
     }
 
     @Override

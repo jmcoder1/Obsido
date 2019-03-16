@@ -41,7 +41,7 @@ public class PartnerGenderStep extends Step<Integer> {
     protected View createStepContentLayout() {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View genderStepContent = inflater.inflate(R.layout.step_genders_layout, null, false);
+        View genderStepContent = inflater.inflate(R.layout.step_partner_genders_layout, null, false);
 
         setupPartnerGender(genderStepContent);
 
