@@ -30,9 +30,11 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="tab_icon_on" />
+                            <entry key="height" value="512" />
+                            <entry key="outputName" value="ic_act_anal" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\Jojo\Downloads\icon_on.svg" />
+                            <entry key="sourceFile" value="C:\Users\Jojo\Downloads\peach.svg" />
+                            <entry key="width" value="512" />
                           </map>
                         </option>
                       </PersistentState>

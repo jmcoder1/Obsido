@@ -14,4 +14,17 @@
         <item>@string/pref_show_pink_theme_key</item>
     </array>
 
+    <string-array name="event_acts">
+        <item>@string/event_act_sex</item>
+        <item>@string/event_act_hj</item>
+        <item>@string/event_act_bj</item>
+        <item>@string/event_act_anal</item>
+    </string-array>
+
+    <integer-array name="event_acts_img">
+        <item>@drawable/ic_act_sex</item>
+        <item>@drawable/ic_act_hj</item>
+        <item>@drawable/ic_act_bj</item>
+        <item>@drawable/ic_act_anal</item>
+    </integer-array>
 </resources>

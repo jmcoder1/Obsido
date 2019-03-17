@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.jojo.obsido.R;
+import com.example.jojo.obsido.form.steps.EventActsStep;
 import com.example.jojo.obsido.form.steps.EventCommentsStep;
 import com.example.jojo.obsido.form.steps.EventDateStep;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;
@@ -39,6 +40,7 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
     // Vertical Stepper form element
     private EventCommentsStep mEventCommentsStep;
     private EventDateStep mEventDateStep;
+    private EventActsStep mEventActsStep;
 
     // Shared Preferences Theme color values
     private int mColorPrimary;
@@ -57,7 +59,10 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
                 .getString(R.string.stepper_add_event_date), getApplicationContext());
         mEventCommentsStep = new EventCommentsStep(getResources()
                 .getString(R.string.stepper_add_event_comments), getApplicationContext());
-
+        mEventActsStep = new EventActsStep(getResources()
+                .getString(R.string.stepper_add_event_acts) , getApplicationContext());
+        mEventActsStep.setPrimaryColor(mColorPrimary);
+        
         initVerticalStepper();
 
         Intent intent = getIntent();
@@ -67,7 +72,10 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
         } else {
             setTitle(R.string.stepper_edit_event);
 
+            //mEventDateStep.restoreStepData(intent.getStringExtra(EXTRA_EVENT_DATE));
             mEventCommentsStep.restoreStepData(intent.getStringExtra(EXTRA_EVENT_COMMENTS));
+            //mEventActsStep.restoreStepData(intent.getStringExtra(EXTRA_EVENT_COMMENTS));
+
         }
     }
 
@@ -110,7 +118,7 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
     private void saveEvent() {
         String eventDate = mEventDateStep.getStepDataAsHumanReadableString();
         String eventComments = mEventCommentsStep.getStepData();
-        //String partnerAge = mPartnerAgeStep.getStepDataAsHumanReadableString();
+        //boolean[] eventActs = mPartnerAgeStep.getStepDataAsHumanReadableString();
         //String partnerGender = Integer.toString(mPartnerGenderStep.getStepData());
 
         Intent data = new Intent();
@@ -146,7 +154,7 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
         Log.v(LOG_TAG, "loadVerticalStepperSharedPreferences: called.");
         VerticalStepperFormView verticalStepperForm = findViewById(R.id.stepper_form);
         verticalStepperForm
-                .setup(this, mEventDateStep, mEventCommentsStep)
+                .setup(this, mEventDateStep, mEventActsStep, mEventCommentsStep)
                 .stepNumberColors(mColorPrimary,
                         getResources().getColor(R.color.verticalStepperTextColor))
                 .init();

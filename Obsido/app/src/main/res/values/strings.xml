@@ -57,18 +57,34 @@
     <string name="empty_partners_list" translatable="true">It\'s a bit lonely here</string>
     <string name="empty_partners_subtitle" translatable="true">Get started by adding a partner</string>
 
-    <!-- Strings for the Vertical Stepper to add a new partner -->
-    <string name="stepper_add_partner_name" translatable="true">Name</string>
-    <string name="stepper_add_partner_description" translatable="true">Description</string>
-    <string name="stepper_add_partner_gender" translatable="true">Gender</string>
+    <!-- Vertical Stepper strings -->
+        <!-- Adding a partner stepper -->
+        <string name="stepper_add_partner_name" translatable="true">Name</string>
+        <string name="stepper_add_partner_description" translatable="true">Description</string>
+        <string name="stepper_add_partner_gender" translatable="true">Gender</string>
 
-    <string name="stepper_add_partner_gender_male" translatable="true">Male</string>
-    <string name="stepper_add_partner_gender_female" translatable="true">Female</string>
-    <string name="stepper_add_partner_age" translatable="true">Age</string>
+        <string name="stepper_add_partner" translatable="true">Add partner</string>
+        <string name="stepper_edit_partner" translatable="true">Edit Partner</string>
 
-    <!-- Strings for the Vertical Stepper to add a new event -->
-    <string name="stepper_add_event_comments" translatable="true">Comments</string>
-    <string name="stepper_add_event_date" translatable="true">Date</string>
+        <string name="stepper_add_partner_gender_male" translatable="true">Male</string>
+        <string name="stepper_add_partner_gender_female" translatable="true">Female</string>
+        <string name="stepper_add_partner_age" translatable="true">Age</string>
+
+        <!-- Adding an event stepper -->
+        <string name="stepper_add_event_comments" translatable="true">Comments</string>
+        <string name="stepper_add_event_date" translatable="true">Date</string>
+        <string name="stepper_add_event_acts">Acts</string>
+
+        <string name="stepper_add_event" translatable="true">Add Event</string>
+        <string name="stepper_edit_event" translatable="true">Edit Event</string>
+
+        <string name="event_act_sex">Sex</string>
+        <string name="event_act_hj">Handjob</string>
+        <string name="event_act_bj">Blowjob</string>
+        <string name="event_act_anal">Anal</string>
+
+
+    <string name="stepper_error_min_events">At least 1 event must be selected</string>"
 
     <!-- Strings for the Vertical Stepper to move onto the next step -->
     <string name="stepper_add_partner_next_button">Next</string>
@@ -76,14 +92,5 @@
 
     <!-- Strings for new toast messages -->
     <string name="shared_preferences_theme_changed">Applying changes</string>
-
-    <!-- Strings for the title of the Stepper activities [CHAR LIMIT = 20] -->
-    <string name="stepper_add_partner" translatable="true">Add partner</string>
-    <string name="stepper_edit_partner" translatable="true">Edit Partner</string>
-
-    <string name="stepper_add_event" translatable="true">Add Event</string>
-    <string name="stepper_edit_event" translatable="true">Edit Event</string>
-
-
 
 </resources>
