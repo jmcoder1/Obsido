@@ -1,5 +1,6 @@
 package com.applandeo.materialcalendarview.utils;
 
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
@@ -7,8 +8,11 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.os.Build;
+import android.provider.CalendarContract;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.applandeo.materialcalendarview.EventDay;
 
 import java.util.List;
 
@@ -65,15 +69,16 @@ public class ImageUtils {
     }
 
     /**
-     * This mehod sets the color of the event day icon.
+     * This method sets the color of the event day icon.
      * @param calendarProperties The resource class containing the color attributes.
      */
     public static void setEventIconColor(CalendarProperties calendarProperties) {
-        List<ImageView> icons = calendarProperties.getEventDayIcons();
+        List<EventDay> eventDays = calendarProperties.getEventDays();
         int eventIconColor = calendarProperties.getEventIconColor();
-        for(int i = 0; i < icons.size(); i++) {
-            ImageView icon = icons.get(i);
-            icon.setColorFilter(eventIconColor);
+        for(int i = 0; i < eventDays.size(); i++) {
+            EventDay eventDay = eventDays.get(i);
+            Drawable eventIcon = (Drawable) eventDay.getImageDrawable();
+            eventIcon.setColorFilter(eventIconColor, PorterDuff.Mode.SRC_ATOP);
         }
     }
 }

@@ -14,6 +14,8 @@ import com.example.jojo.obsido.form.steps.EventCommentsStep;
 import com.example.jojo.obsido.form.steps.EventDateStep;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 
+import java.util.Date;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,10 +32,8 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
             "com.example.jojo.obsido.EXTRA_EVENT_ID";
     public static final String EXTRA_EVENT_DATE =
             "com.example.jojo.obsido.EXTRA_EVENT_DATE";
-    public static final String EXTRA_EVENT_POSITIONS =
-            "com.example.jojo.obsido.EXTRA_EVENT_POSITIONS";
-    public static final String EXTRA_EVENT_RATING =
-            "com.example.jojo.obsido.EXTRA_EVENT_RATING";
+    public static final String EXTRA_EVENT_ACTS =
+            "com.example.jojo.obsido.EXTRA_EVENT_ACTS";
     public static final String EXTRA_EVENT_COMMENTS =
             "com.example.jojo.obsido.EXTRA_EVENT_COMMENTS";
 
@@ -44,7 +44,6 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
 
     // Shared Preferences Theme color values
     private int mColorPrimary;
-    private int mColorPrimaryDark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
         mEventActsStep = new EventActsStep(getResources()
                 .getString(R.string.stepper_add_event_acts) , getApplicationContext());
         mEventActsStep.setPrimaryColor(mColorPrimary);
-        
+
         initVerticalStepper();
 
         Intent intent = getIntent();
@@ -72,9 +71,9 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
         } else {
             setTitle(R.string.stepper_edit_event);
 
-            //mEventDateStep.restoreStepData(intent.getStringExtra(EXTRA_EVENT_DATE));
+            mEventDateStep.restoreStepData((Date) intent.getSerializableExtra(EXTRA_EVENT_DATE));
             mEventCommentsStep.restoreStepData(intent.getStringExtra(EXTRA_EVENT_COMMENTS));
-            //mEventActsStep.restoreStepData(intent.getStringExtra(EXTRA_EVENT_COMMENTS));
+            mEventActsStep.restoreStepData(intent.getBooleanArrayExtra(EXTRA_EVENT_ACTS));
 
         }
     }
@@ -112,20 +111,17 @@ public class AddEditEventActivity extends AppCompatActivity implements StepperFo
         }
 
         mColorPrimary = SharedPreferenceUtils.getColorPrimary(getTheme());
-        mColorPrimaryDark = SharedPreferenceUtils.getColorPrimaryDark(getTheme());
     }
 
     private void saveEvent() {
-        String eventDate = mEventDateStep.getStepDataAsHumanReadableString();
+        long eventDate = mEventDateStep.getStepData().getTime();
         String eventComments = mEventCommentsStep.getStepData();
-        //boolean[] eventActs = mPartnerAgeStep.getStepDataAsHumanReadableString();
-        //String partnerGender = Integer.toString(mPartnerGenderStep.getStepData());
+        boolean[] eventActs = mEventActsStep.getStepData();
 
         Intent data = new Intent();
         data.putExtra(EXTRA_EVENT_DATE, eventDate);
         data.putExtra(EXTRA_EVENT_COMMENTS, eventComments);
-        //data.putExtra(EXTRA_PARTNER_AGE, Integer.parseInt(partnerAge));
-        //data.putExtra(EXTRA_PARTNER_GENDER, Integer.parseInt(partnerGender));
+        data.putExtra(EXTRA_EVENT_ACTS, eventActs);
 
         int id = getIntent().getIntExtra(EXTRA_EVENT_ID, -1);
         if(id != -1) {

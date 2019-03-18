@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 
 import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -161,6 +160,8 @@ public class CalendarView extends LinearLayout {
         AppearanceUtils.setPagesColor(getRootView(), mCalendarProperties.getPagesColor());
 
         DayColorsUtils.setDaysBackgroundColor(getResources(), mCalendarProperties);
+
+        ImageUtils.setEventIconColor(mCalendarProperties);
 
         // Sets layout for date picker or normal calendar
         setCalendarRowLayout();
@@ -325,11 +326,11 @@ public class CalendarView extends LinearLayout {
     }
 
     public void setEvents(List<EventDay> eventDays) {
-        if (mCalendarProperties.getEventsEnabled()) {
+        if (mCalendarProperties.getEventsEnabled() && eventDays != null) {
             mCalendarProperties.setEventDays(eventDays);
-            mCalendarPageAdapter.notifyDataSetChanged();
             mCalendarProperties.setEventCalendarDays(initCalendarList(eventDays));
-            Log.v("CalendarView", "num event days: " + mCalendarProperties.getEventCalendarDays().size());
+            mCalendarPageAdapter.notifyDataSetChanged();
+            ImageUtils.setEventIconColor(mCalendarProperties);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.jojo.obsido.fragments;
 
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,9 +15,12 @@ import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
 import com.example.jojo.obsido.R;
+import com.example.jojo.obsido.db.Event;
+import com.example.jojo.obsido.utils.EventUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -75,7 +79,6 @@ public class CalendarFragment extends Fragment {
         mToolbar = getActivity().findViewById(R.id.toolbar);
 
         initCalendarView();
-        initEvents();
         return rootViewCalendar;
     }
 
@@ -115,18 +118,21 @@ public class CalendarFragment extends Fragment {
         }
     }
 
-    private void initEvents() {
+    public void setEvents(List<Event> events) {
         List<EventDay> eventDays = new ArrayList<>();
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(Calendar.DAY_OF_MONTH, 12);
 
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(Calendar.DAY_OF_MONTH, 16);
+        if(events != null) {
+            for(int i = 0; i < events.size(); i++) {
+                Event event = events.get(i);
+                Calendar calendar = Calendar.getInstance();
+                Date eventDate = event.getDate();
+                calendar.setTime(eventDate);
 
-        Drawable draw = getResources().getDrawable(R.drawable.test_event);
-
-        eventDays.add(new EventDay(calendar1, draw));
-        eventDays.add(new EventDay(calendar2, draw));
+                Drawable eventDrawable = EventUtils.getEventDrawable(event, getResources());
+                EventDay eventDay = new EventDay(calendar, eventDrawable);
+                eventDays.add(eventDay);
+            }
+        }
 
         mCalendarView.setEvents(eventDays);
     }
@@ -140,5 +146,6 @@ public class CalendarFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
 
 }

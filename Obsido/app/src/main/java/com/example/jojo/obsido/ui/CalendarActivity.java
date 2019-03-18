@@ -5,7 +5,11 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,6 +23,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.jojo.obsido.db.Event;
+import com.example.jojo.obsido.db.EventViewModel;
+import com.example.jojo.obsido.db.Partner;
+import com.example.jojo.obsido.db.PartnerViewModel;
 import com.example.jojo.obsido.fragments.CalendarFragment;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,19 +37,25 @@ import com.example.jojo.obsido.R;
 
 import com.example.jojo.obsido.SettingsActivity;
 
+import java.util.Date;
+import java.util.List;
+
 public class CalendarActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String LOG_TAG = "CalendarActivity".getClass().getSimpleName();
 
-    private FragmentManager fragmentManager;
+    private CalendarFragment mCalendarFragment;
 
-    public static final int ADD_PARTNER_REQUEST = 1;
-    public static final int EDIT_PARTNER_REQUEST = 2;
+    public static final int ADD_EVENT_REQUEST = 1;
+    public static final int EDIT_EVENT_REQUEST = 2;
 
     // UI XML Views
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
+
+    // Db elements
+    private EventViewModel eventViewModel;
 
     // Theme colors
     private int mColorPrimaryAccent;
@@ -57,10 +71,20 @@ public class CalendarActivity extends AppCompatActivity implements
         initToolbar();
         initDrawer();
 
-        fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        mCalendarFragment = new CalendarFragment();
         fragmentManager.beginTransaction()
-                .add(R.id.calendar_container, new CalendarFragment())
+                .add(R.id.calendar_container, mCalendarFragment)
                 .commit();
+
+        eventViewModel = ViewModelProviders.of(this).get(EventViewModel.class);
+        eventViewModel.getAllEvents().observe(this, new Observer<List<Event>>() {
+            @Override
+            public void onChanged(@Nullable List<Event> events) {
+                mCalendarFragment.setEvents(events);
+            }
+        });
 
     }
 
@@ -106,7 +130,7 @@ public class CalendarActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 Intent calendarEventIntent = new Intent(CalendarActivity.this, AddEditEventActivity.class);
-                startActivityForResult(calendarEventIntent, ADD_PARTNER_REQUEST);
+                startActivityForResult(calendarEventIntent, ADD_EVENT_REQUEST);
             }
         });
 
@@ -213,5 +237,47 @@ public class CalendarActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         setUpSharedPreference();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_EVENT_REQUEST && resultCode == RESULT_OK) {
+            long eventDateLong = data.getLongExtra(AddEditEventActivity.EXTRA_EVENT_DATE, -1);
+            Date eventDate = new Date(eventDateLong);
+
+            boolean[] eventActs = data.getBooleanArrayExtra(AddEditEventActivity.EXTRA_EVENT_ACTS);
+
+            String eventComments = data.getStringExtra(AddEditEventActivity.EXTRA_EVENT_COMMENTS);
+
+            Event event = new Event(eventDate, eventComments, eventActs[Event.EVENT_SEX_INDEX],
+                    eventActs[Event.EVENT_HANDJOB_INDEX], eventActs[Event.EVENT_BLOWJOB_INDEX],
+                    eventActs[Event.EVENT_ANAL_INDEX]);
+            eventViewModel.insert(event);
+
+            Snackbar.make(getWindow().getDecorView().getRootView(), "Partner saved",
+                    Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+        } else if (requestCode == EDIT_EVENT_REQUEST && resultCode == RESULT_OK) {
+            /*int id = data.getIntExtra(AddEditProfileActivity.EXTRA_PARTNER_ID, -1);
+
+            if (id == -1) {
+                return;
+            }
+
+            String partnerName = data.getStringExtra(AddEditProfileActivity.EXTRA_PARTNER_NAME);
+            String partnerDescription = data.getStringExtra(AddEditProfileActivity.EXTRA_PARTNER_DESCRIPTION);
+            int partnerAge = data.getIntExtra(AddEditProfileActivity.EXTRA_PARTNER_AGE, 0);
+            int partnerGender = data.getIntExtra(AddEditProfileActivity.EXTRA_PARTNER_GENDER, 0);
+
+            Partner partner = new Partner(partnerName, partnerDescription, partnerAge, partnerGender);
+            partner.setId(id);
+            partnerViewModel.update(partner);*/
+
+        } else {
+            Snackbar.make(getWindow().getDecorView().getRootView(), "Partner not saved",
+                    Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }
     }
 }
