@@ -68,9 +68,7 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
 
         Calendar today = DateUtils.getCalendar();
 
-        if(day.equals(today)) {
-            mEventDayTextView.add(dayLabel);
-        } else if(isEventDay(day)) {
+        if(day.equals(today) || isEventDay(day)) {
             mEventDayTextView.add(dayLabel);
         }
 
@@ -90,7 +88,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
             ( (View) dayTextView.getParent()).setClickable(false);;
             dayTextView.setClickable(false);
             dayIcon.setClickable(false);
-            ( (View) dayTextView.getParent()).setClickable(false);
             return;
         }
 
