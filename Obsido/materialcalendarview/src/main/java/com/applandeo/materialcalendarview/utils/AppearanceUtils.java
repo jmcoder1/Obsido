@@ -1,8 +1,5 @@
 package com.applandeo.materialcalendarview.utils;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import androidx.core.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.widget.TextView;
 
@@ -53,7 +50,5 @@ public final class AppearanceUtils {
 
         view.findViewById(R.id.calendarViewPager).setBackgroundColor(color);
     }
-
-
 
 }

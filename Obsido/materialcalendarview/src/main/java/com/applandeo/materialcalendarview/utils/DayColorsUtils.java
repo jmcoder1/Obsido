@@ -18,22 +18,24 @@ public class DayColorsUtils {
      * This is general method which sets a color of the text, font type and a background of a
      * TextView object. It is used to set day cell (numbers) style.
      *
-     * @param textView   TextView containing a day number
+     * @param dayLabel   TextView containing a day number
      * @param textColor  A resource of a color of the day number
      * @param typeface   A type of text style, can be set as NORMAL or BOLD
      * @param background A resource of a background drawable
      */
-    public static void setDayColors(TextView textView, View parentView, int textColor, int typeface, int background) {
-        if (textView == null) {
+    public static void setDayColors(TextView dayLabel, int textColor, int typeface, int background) {
+        if (dayLabel == null) {
             return;
         }
+
+        View parentView = (View) dayLabel.getParent();
 
         if(parentView == null) {
             return;
         }
 
-        textView.setTypeface(null, typeface);
-        textView.setTextColor(textColor);
+        dayLabel.setTypeface(null, typeface);
+        dayLabel.setTextColor(textColor);
         parentView.setBackgroundResource(background);
 
     }
@@ -46,12 +48,13 @@ public class DayColorsUtils {
      * @param dayLabel           TextView containing a day number
      * @param calendarProperties A resource of a selection background color
      */
-    public static void setSelectedDayColors(TextView dayLabel, View dayParent,
+    public static void setSelectedDayColors(TextView dayLabel,
                                             CalendarProperties calendarProperties) {
-        setDayColors(dayLabel, dayParent, calendarProperties.getSelectedDayColor(), Typeface.NORMAL,
+        setDayColors(dayLabel, calendarProperties.getSelectedDayColor(), Typeface.NORMAL,
                 R.drawable.selected_day_bg);
+        View parentView = (View) dayLabel.getParent();
 
-        ImageUtils.setDrawableBackgroundColor(dayParent.getBackground(), calendarProperties.getSelectedDayColor());
+        ImageUtils.setDrawableBackgroundColor(parentView.getBackground(), calendarProperties.getSelectedDayColor());
     }
 
     /**
@@ -112,38 +115,19 @@ public class DayColorsUtils {
      * @param calendarProperties A resource of a color used to mark today day
      */
     public static void setCurrentMonthDayColors(Calendar day, Calendar today, TextView dayLabel,
-                                                View parentView, CalendarProperties calendarProperties) {
+                                                CalendarProperties calendarProperties) {
         if (today.equals(day)) {
-            setDayColors(dayLabel, parentView, calendarProperties.getTodayDayColor(), Typeface.BOLD,
+            setDayColors(dayLabel, calendarProperties.getTodayDayColor(), Typeface.BOLD,
                     R.drawable.selected_today_day_bg);
         } else if(calendarProperties.getEventCalendarDays().contains(day)) {
-            setDayColors(dayLabel, parentView, calendarProperties.getEventDayColor(), Typeface.BOLD,
+            setDayColors(dayLabel, calendarProperties.getEventDayColor(), Typeface.BOLD,
                     R.drawable.selected_event_day_bg);
         } else {
-            setDayColors(dayLabel, parentView, calendarProperties.getDaysLabelsColor(), Typeface.NORMAL,
+            setDayColors(dayLabel, calendarProperties.getDaysLabelsColor(), Typeface.NORMAL,
                     R.drawable.selected_day_bg);
         }
     }
 
-    /**
-     * This method is used to set a color of texts, font types and backgrounds of TextView objects
-     * for current event days.
-     *
-     * @param day                A calendar instance representing day date
-     * @param today              A calendar instance representing today date
-     * @param dayLabel           TextView containing a day number
-     * @param calendarProperties A resource of a color used to mark today day
-     */
-    public static void setEventMonthDayColors(Calendar day, Calendar today, TextView dayLabel,
-                                                View parent, CalendarProperties calendarProperties) {
-        if (today.equals(day)) {
-            setDayColors(dayLabel, parent, calendarProperties.getTodayDayColor(), Typeface.BOLD,
-                    R.drawable.selected_today_day_bg);
-        } else {
-            setDayColors(dayLabel, parent, calendarProperties.getDaysLabelsColor(), Typeface.NORMAL,
-                    R.drawable.selected_day_bg);
-        }
-    }
 
     /**
      * This method is used to set the background color of the day background resource objects.

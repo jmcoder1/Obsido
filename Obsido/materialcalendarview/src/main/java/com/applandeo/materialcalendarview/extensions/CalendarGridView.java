@@ -2,7 +2,6 @@ package com.applandeo.materialcalendarview.extensions;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.GridView;
 
 public class CalendarGridView extends GridView {
@@ -25,8 +24,5 @@ public class CalendarGridView extends GridView {
         int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
                 MeasureSpec.AT_MOST);
         super.onMeasure(widthMeasureSpec, expandSpec);
-    }
-
-    public void dayClicked(View v) {
     }
 }

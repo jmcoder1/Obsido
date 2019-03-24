@@ -1,37 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/dayLabel"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:id="@+id/dayParent"
-        android:orientation="vertical">
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:textSize="15sp"
+        tools:text="14"/>
 
-        <TextView
-            android:id="@+id/dayLabel"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            android:textSize="15sp"
-            android:clickable="true"
-            android:focusable="true"
-            tools:text="14"/>
-
-        <ImageView
-            android:id="@+id/dayIcon"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="centerInside"/>
-
-    </LinearLayout>
-
+    <ImageView
+        android:id="@+id/dayIcon"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"/>
 
 </LinearLayout>
 

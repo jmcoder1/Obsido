@@ -13,6 +13,7 @@
         <attr name="pagesColor" format="color" />
         <attr name="daysLabelsColor" format="color" />
         <attr name="anotherMonthsDaysLabelsColor" format="color" />
+        <attr name="swipeEnabled" format="boolean"/>
         <attr name="eventsEnabled" format="boolean" />
         <attr name="type" />
     </declare-styleable>

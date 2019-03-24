@@ -34,7 +34,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
 
     // DayClickListener Views
     private List<TextView> mEventDayTextView = new ArrayList<>();
-    private View mLastClickedDayParentView;
     private TextView mLastClickedDayTextView;
 
     CalendarDayAdapter(CalendarPageAdapter calendarPageAdapter, Context context,
@@ -45,7 +44,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
         mPageMonth = pageMonth < 0 ? 11 : pageMonth;
         mLayoutInflater = LayoutInflater.from(context);
 
-        DayColorsUtils.setDaysBackgroundColor(getContext().getResources(), mCalendarProperties);
     }
 
     @NonNull
@@ -55,11 +53,10 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
             view = mLayoutInflater.inflate(mCalendarProperties.getItemLayoutResource(), parent,false);
         }
 
-        View dayParent = view.findViewById(R.id.dayParent);
         TextView dayLabel = view.findViewById(R.id.dayLabel);
         ImageView dayIcon = view.findViewById(R.id.dayIcon);
 
-        setDayClickedListener(dayParent, dayLabel, dayIcon);
+        setDayClickedListener(dayLabel, dayIcon);
         Calendar day = new GregorianCalendar();
         day.setTime(getItem(position));
 
@@ -77,22 +74,23 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
             mEventDayTextView.add(dayLabel);
         }
 
-        setLabelColors(dayLabel, dayIcon, dayParent, day);
+        setLabelColors(dayLabel, dayIcon, day);
         dayLabel.setText(String.valueOf(day.get(Calendar.DAY_OF_MONTH)));
 
         return view;
     }
 
-    private void setLabelColors(TextView dayTextView, View dayIcon, View dayParent, Calendar day) {
+    private void setLabelColors(TextView dayTextView, View dayIcon, Calendar day) {
         Calendar today = DateUtils.getCalendar();
 
         // Attributes for the days not in the current month
         if (!isCurrentMonthDay(day)) {
-            DayColorsUtils.setDayColors(dayTextView, dayParent, mCalendarProperties.getAnotherMonthsDaysLabelsColor(),
+            DayColorsUtils.setDayColors(dayTextView, mCalendarProperties.getAnotherMonthsDaysLabelsColor(),
                     Typeface.NORMAL, R.drawable.background_transparent);
+            ( (View) dayTextView.getParent()).setClickable(false);;
             dayTextView.setClickable(false);
             dayIcon.setClickable(false);
-            dayParent.setClickable(false);
+            ( (View) dayTextView.getParent()).setClickable(false);
             return;
         }
 
@@ -102,12 +100,12 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
                     .filter(selectedDay -> selectedDay.getCalendar().equals(day))
                     .findFirst().ifPresent(selectedDay -> selectedDay.setView(dayTextView));
 
-            DayColorsUtils.setSelectedDayColors(dayTextView, dayParent, mCalendarProperties);
+            DayColorsUtils.setSelectedDayColors(dayTextView, mCalendarProperties);
             return;
         }
 
 
-        DayColorsUtils.setCurrentMonthDayColors(day, today, dayTextView, dayParent, mCalendarProperties);
+        DayColorsUtils.setCurrentMonthDayColors(day, today, dayTextView, mCalendarProperties);
     }
 
     private boolean isSelectedDay(Calendar day) {
@@ -148,7 +146,7 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
         });
     }
 
-    private void setDayClickedListener(View dayParentView, TextView dayTextView, ImageView dayIcon) {
+    private void setDayClickedListener(TextView dayTextView, ImageView dayIcon) {
         View.OnClickListener dayClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,8 +154,7 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
                 if(mLastClickedDayTextView == dayTextView) {
                     return;
                 }
-
-                dayParentView.setPressed(true);
+                ( (View) dayTextView.getParent()).setPressed(true);
                 dayTextView.setTypeface(dayTextView.getTypeface(), Typeface.BOLD);
 
                 // Handle clicks on event days so they do not lose their previous styling after being pressed
@@ -166,23 +163,20 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
                     dayTextView.setTextColor(mCalendarProperties.getSelectedDayColor());
                 }
 
-                if(mLastClickedDayParentView != null && mLastClickedDayTextView != null) {
-                    mLastClickedDayParentView.setPressed(false);
-
+                if(mLastClickedDayTextView != null) {
                     // Handle clicks on non event days to return to their default styling
                     if(!mEventDayTextView.contains(mLastClickedDayTextView)) {
                         mLastClickedDayTextView.setTextColor(mCalendarProperties.getDaysLabelsColor());
                         mLastClickedDayTextView.setTypeface(Typeface.DEFAULT);
                     }
                 }
-                mLastClickedDayParentView = dayParentView;
                 mLastClickedDayTextView = dayTextView;
 
             }
         };
 
-        dayTextView.setOnClickListener(dayClickListener);
-        dayIcon.setOnClickListener(dayClickListener);
+        //( (View) dayTextView.getParent()).setOnClickListener(dayClickListener);
+        //dayIcon.setOnClickListener(dayClickListener);
     }
 
 }

@@ -55,11 +55,12 @@ public class CalendarView extends LinearLayout {
     public static final int RANGE_PICKER = 3;
 
     private Context mContext;
-    private int mCurrentPage;
-    private String mCalendarTitleDate;
-
     private CalendarPageAdapter mCalendarPageAdapter;
+
+    private String mCalendarTitleDate;
+    private int mCurrentPage;
     private CalendarViewPager mViewPager;
+
     private CalendarProperties mCalendarProperties;
 
     public CalendarView(Context context, AttributeSet attrs) {
@@ -74,12 +75,14 @@ public class CalendarView extends LinearLayout {
         initCalendar();
     }
 
+    // protected constructor to create CalendarView for the dialog date picker
     protected CalendarView(Context context, CalendarProperties calendarProperties) {
         super(context);
         mContext = context;
         mCalendarProperties = calendarProperties;
 
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.calendar_view, this);
 
         mViewPager = findViewById(R.id.calendarViewPager);
@@ -100,6 +103,11 @@ public class CalendarView extends LinearLayout {
         setAttributes(attrs);
     }
 
+    /**
+     * This method set xml values for calendar elements
+     *
+     * @param attrs A set of xml attributes
+     */
     private void setAttributes(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CalendarView);
 
@@ -149,6 +157,9 @@ public class CalendarView extends LinearLayout {
                 mCalendarProperties.getCalendarType() == CLASSIC);
         mCalendarProperties.setEventsEnabled(eventsEnabled);
 
+        boolean swipeEnabled = typedArray.getBoolean(R.styleable.CalendarView_swipeEnabled, true);
+        mCalendarProperties.setSwipeEnabled(swipeEnabled);
+
     }
 
     private void initAttributes() {
@@ -156,6 +167,10 @@ public class CalendarView extends LinearLayout {
 
         AppearanceUtils.setWeekDayLabels(getRootView(), mCalendarProperties.getWeekDayLabelColor(),
                 mCalendarProperties.getFirstPageCalendarDate().getFirstDayOfWeek());
+
+        AppearanceUtils.setPagesColor(getRootView(), mCalendarProperties.getPagesColor());
+
+        mViewPager.setSwipeEnabled(mCalendarProperties.getSwipeEnabled());
 
         AppearanceUtils.setPagesColor(getRootView(), mCalendarProperties.getPagesColor());
 
@@ -184,24 +199,6 @@ public class CalendarView extends LinearLayout {
         setUpCalendarPosition(Calendar.getInstance());
     }
 
-    public void hideCalendarEvents() {
-        List<ImageView> icons = mCalendarProperties.getEventDayIcons();
-        mCalendarProperties.setShowEventIcons(false);
-        for(int i = 0; i < icons.size(); i++) {
-            ImageView icon = icons.get(i);
-            icon.setVisibility(INVISIBLE);
-        }
-    }
-
-    public void showCalendarEvents() {
-        List<ImageView> icons = mCalendarProperties.getEventDayIcons();
-        mCalendarProperties.setShowEventIcons(true);
-        for(int i = 0; i < icons.size(); i++) {
-            ImageView icon = icons.get(i);
-            icon.setVisibility(VISIBLE);
-        }
-    }
-
     private void setUpCalendarPosition(Calendar calendar) {
         DateUtils.setMidnight(calendar);
 
@@ -212,7 +209,7 @@ public class CalendarView extends LinearLayout {
         mCalendarProperties.getFirstPageCalendarDate().setTime(calendar.getTime());
         mCalendarProperties.getFirstPageCalendarDate().add(Calendar.MONTH, -FIRST_VISIBLE_PAGE);
 
-        mViewPager.setCurrentItem(FIRST_VISIBLE_PAGE, true);
+        mViewPager.setCurrentItem(FIRST_VISIBLE_PAGE);
     }
 
     public void setOnPreviousPageChangeListener(OnCalendarPageChangeListener listener) {
@@ -325,13 +322,34 @@ public class CalendarView extends LinearLayout {
         setDate(calendar);
     }
 
-    public void setEvents(List<EventDay> eventDays) {
+    public void hideEvents() {
+        List<ImageView> icons = mCalendarProperties.getEventDayIcons();
+        mCalendarProperties.setShowEventIcons(false);
+        for(int i = 0; i < icons.size(); i++) {
+            ImageView icon = icons.get(i);
+            icon.setVisibility(INVISIBLE);
+        }
+    }
+
+    public void showEvents() {
+        List<ImageView> icons = mCalendarProperties.getEventDayIcons();
+        mCalendarProperties.setShowEventIcons(true);
+        for(int i = 0; i < icons.size(); i++) {
+            ImageView icon = icons.get(i);
+            icon.setVisibility(VISIBLE);
+        }
+    }
+
+    public void setEventDays(List<EventDay> eventDays) {
         if (mCalendarProperties.getEventsEnabled() && eventDays != null) {
             mCalendarProperties.setEventDays(eventDays);
             mCalendarProperties.setEventCalendarDays(initCalendarList(eventDays));
             mCalendarPageAdapter.notifyDataSetChanged();
-            ImageUtils.setEventIconColor(mCalendarProperties);
         }
+    }
+
+    public List<EventDay> getEventDays() {
+        return mCalendarProperties.getEventDays();
     }
 
     private List<Calendar> initCalendarList(List<EventDay> eventDays) {

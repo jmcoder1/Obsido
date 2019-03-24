@@ -22,6 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 public final class CalendarUtils {
 
+    /*
+    Utils method to create drawable containing text
+     */
     public static Drawable getDrawableText(Context context, String text, Typeface typeface, int color, int size) {
         Resources resources = context.getResources();
         Bitmap bitmap = Bitmap.createBitmap(48, 48, Bitmap.Config.ARGB_8888);

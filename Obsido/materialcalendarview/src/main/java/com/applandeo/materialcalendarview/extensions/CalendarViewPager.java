@@ -3,9 +3,12 @@ package com.applandeo.materialcalendarview.extensions;
 import android.content.Context;
 import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class CalendarViewPager extends ViewPager {
+
+    private boolean mSwipeEnabled = true;
 
     public CalendarViewPager(Context context) {
         super(context);
@@ -15,7 +18,7 @@ public class CalendarViewPager extends ViewPager {
         super(context, attrs);
     }
 
-    // This method is needed to get wrap_content height for ViewPager
+    //This method is needed to get wrap_content height for ViewPager
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height = 0;
@@ -37,4 +40,19 @@ public class CalendarViewPager extends ViewPager {
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
+
+    public void setSwipeEnabled(boolean swipeEnabled) {
+        this.mSwipeEnabled = swipeEnabled;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return mSwipeEnabled && super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        return mSwipeEnabled && super.onInterceptTouchEvent(event);
+    }
+
 }

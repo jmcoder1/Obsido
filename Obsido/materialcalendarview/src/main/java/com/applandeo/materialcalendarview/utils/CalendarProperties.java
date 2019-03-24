@@ -40,6 +40,7 @@ public class CalendarProperties {
 
     private boolean mEventsEnabled;
     private boolean mShowEventIcons = true;
+    private boolean mSwipeEnabled = true;
 
     private Calendar mFirstPageCalendarDate = DateUtils.getCalendar();
     private Calendar mCalendar, mMinimumDate, mMaximumDate;
@@ -95,6 +96,14 @@ public class CalendarProperties {
 
     public void setEventCalendarDays(List<Calendar> eventCalendarDays) {
         mEventCalendarDays = eventCalendarDays;
+    }
+
+    public void setSwipeEnabled(boolean swipeEnabled) {
+        mSwipeEnabled = swipeEnabled;
+    }
+
+    public boolean getSwipeEnabled() {
+        return mSwipeEnabled;
     }
 
     public List<Calendar> getEventCalendarDays() {
