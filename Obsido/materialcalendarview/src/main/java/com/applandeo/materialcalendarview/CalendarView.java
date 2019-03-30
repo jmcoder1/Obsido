@@ -345,6 +345,7 @@ public class CalendarView extends LinearLayout {
             mCalendarProperties.setEventDays(eventDays);
             mCalendarProperties.setEventCalendarDays(initCalendarList(eventDays));
             mCalendarPageAdapter.notifyDataSetChanged();
+            ImageUtils.setEventIconColor(mCalendarProperties);
         }
     }
 

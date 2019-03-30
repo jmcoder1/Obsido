@@ -46,7 +46,6 @@ public class EventDay {
         mDrawable = drawable;
     }
 
-
     /**
      * @return An image resource which will be displayed in the day row
      */

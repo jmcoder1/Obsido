@@ -1,5 +1,6 @@
 package com.applandeo.materialcalendarview.listeners;
 
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -32,6 +33,9 @@ public class DayRowClickListener implements AdapterView.OnItemClickListener {
 
     private CalendarProperties mCalendarProperties;
     private int mPageMonth;
+    private View mLastClickedDayView;
+    private TextView mLastClickedTextView;
+    private Calendar mLastClickedCalendarDay;
 
     public DayRowClickListener(CalendarPageAdapter calendarPageAdapter, CalendarProperties calendarProperties, int pageMonth) {
         mCalendarPageAdapter = calendarPageAdapter;
@@ -40,29 +44,29 @@ public class DayRowClickListener implements AdapterView.OnItemClickListener {
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> adapterView, View dayView, int position, long id) {
         Calendar day = new GregorianCalendar();
         day.setTime((Date) adapterView.getItemAtPosition(position));
 
         if (mCalendarProperties.getOnDayClickListener() != null) {
-            onClick(day);
+            onClick(day, dayView);
         }
 
         switch (mCalendarProperties.getCalendarType()) {
             case CalendarView.ONE_DAY_PICKER:
-                selectOneDay(view, day);
+                selectOneDay(dayView, day);
                 break;
 
             case CalendarView.MANY_DAYS_PICKER:
-                selectManyDays(view, day);
+                selectManyDays(dayView, day);
                 break;
 
             case CalendarView.RANGE_PICKER:
-                selectRange(view, day);
+                selectRange(dayView, day);
                 break;
 
             case CalendarView.CLASSIC:
-                mCalendarPageAdapter.setSelectedDay(new SelectedDay(view, day));
+                mCalendarPageAdapter.setSelectedDay(new SelectedDay(dayView, day));
         }
     }
 
@@ -162,7 +166,7 @@ public class DayRowClickListener implements AdapterView.OnItemClickListener {
                 && isCurrentMonthDay(day) && isActiveDay(day);
     }
 
-    private void onClick(Calendar day) {
+    private void onClick(Calendar day, View dayView) {
         if (mCalendarProperties.getEventDays() == null) {
             createEmptyEventDay(day);
             return;
@@ -172,6 +176,9 @@ public class DayRowClickListener implements AdapterView.OnItemClickListener {
                 .filter(eventDate -> eventDate.getCalendar().equals(day))
                 .findFirst()
                 .ifPresentOrElse(this::callOnClickListener, () -> createEmptyEventDay(day));
+
+        TextView dayTextView = dayView.findViewById(R.id.dayLabel);
+        callOnClickDayView(dayView, day, dayTextView);
     }
 
     private void createEmptyEventDay(Calendar day) {
@@ -185,5 +192,30 @@ public class DayRowClickListener implements AdapterView.OnItemClickListener {
 
         eventDay.setEnabled(enabledDay);
         mCalendarProperties.getOnDayClickListener().onDayClick(eventDay);
+    }
+
+    private void callOnClickDayView(View dayView, Calendar calendarDay, TextView dayTextView) {
+        Calendar today = DateUtils.getCalendar();
+        dayView.setPressed(true);
+
+        // Handle clicks on event days so they do not lose their previous styling after being pressed
+        // Handle clicks on non event days so they retain their default styling after being pressed
+        if (!(mCalendarProperties.getEventCalendarDays().contains(calendarDay))
+                && !today.equals(calendarDay) && isCurrentMonthDay(calendarDay)) {
+            dayTextView.setTextColor(mCalendarProperties.getSelectedDayColor());
+        }
+
+        if (mLastClickedDayView != null) {
+            mLastClickedDayView.setPressed(false);
+            // Handle clicks on non event days to return to their default styling
+            if (!mCalendarProperties.getEventCalendarDays().contains(mLastClickedCalendarDay)
+                    && !today.equals(mLastClickedCalendarDay) && isCurrentMonthDay(mLastClickedCalendarDay)) {
+                mLastClickedTextView.setTextColor(mCalendarProperties.getDaysLabelsColor());
+            }
+        }
+
+        mLastClickedCalendarDay = calendarDay;
+        mLastClickedDayView = dayView;
+        mLastClickedTextView = dayTextView;
     }
 }

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 class CalendarDayAdapter extends ArrayAdapter<Date> {
     private CalendarPageAdapter mCalendarPageAdapter;
@@ -32,9 +31,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
 
     private int mPageMonth;
 
-    // DayClickListener Views
-    private List<TextView> mEventDayTextView = new ArrayList<>();
-    private TextView mLastClickedDayTextView;
 
     CalendarDayAdapter(CalendarPageAdapter calendarPageAdapter, Context context,
                        CalendarProperties calendarProperties, ArrayList<Date> dates, int pageMonth) {
@@ -56,7 +52,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
         TextView dayLabel = view.findViewById(R.id.dayLabel);
         ImageView dayIcon = view.findViewById(R.id.dayIcon);
 
-        setDayClickedListener(dayLabel, dayIcon);
         Calendar day = new GregorianCalendar();
         day.setTime(getItem(position));
 
@@ -66,28 +61,20 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
             mCalendarProperties.addEventDayIcon(dayIcon);
         }
 
-        Calendar today = DateUtils.getCalendar();
-
-        if(day.equals(today) || isEventDay(day)) {
-            mEventDayTextView.add(dayLabel);
-        }
-
-        setLabelColors(dayLabel, dayIcon, day);
+        setLabelColors(view, dayLabel, dayIcon, day);
         dayLabel.setText(String.valueOf(day.get(Calendar.DAY_OF_MONTH)));
 
         return view;
     }
 
-    private void setLabelColors(TextView dayTextView, View dayIcon, Calendar day) {
+    private void setLabelColors(View parentView, TextView dayTextView, View dayIcon, Calendar day) {
         Calendar today = DateUtils.getCalendar();
 
         // Attributes for the days not in the current month
         if (!isCurrentMonthDay(day)) {
             DayColorsUtils.setDayColors(dayTextView, mCalendarProperties.getAnotherMonthsDaysLabelsColor(),
                     Typeface.NORMAL, R.drawable.background_transparent);
-            ( (View) dayTextView.getParent()).setClickable(false);;
-            dayTextView.setClickable(false);
-            dayIcon.setClickable(false);
+            parentView.setClickable(false);
             return;
         }
 
@@ -116,10 +103,6 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
                         || (mCalendarProperties.getMaximumDate() != null && day.after(mCalendarProperties.getMaximumDate())));
     }
 
-    private boolean isEventDay(Calendar day) {
-        return mCalendarProperties.getEventCalendarDays().contains(day);
-    }
-
     private boolean isActiveDay(Calendar day) {
         return !mCalendarProperties.getDisabledDays().contains(day);
     }
@@ -139,41 +122,7 @@ class CalendarDayAdapter extends ArrayAdapter<Date> {
             if (!isCurrentMonthDay(day) || !isActiveDay(day)) {
                 dayIcon.setAlpha(0.12f);
             }
-
         });
-    }
-
-    private void setDayClickedListener(TextView dayTextView, ImageView dayIcon) {
-        View.OnClickListener dayClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Makes sure that triple keeps the selector visible
-                if(mLastClickedDayTextView == dayTextView) {
-                    return;
-                }
-                ( (View) dayTextView.getParent()).setPressed(true);
-                dayTextView.setTypeface(dayTextView.getTypeface(), Typeface.BOLD);
-
-                // Handle clicks on event days so they do not lose their previous styling after being pressed
-                // Handle clicks on non event days so they retain their default styling after being pressed
-                if(!(mEventDayTextView.contains(dayTextView))) {
-                    dayTextView.setTextColor(mCalendarProperties.getSelectedDayColor());
-                }
-
-                if(mLastClickedDayTextView != null) {
-                    // Handle clicks on non event days to return to their default styling
-                    if(!mEventDayTextView.contains(mLastClickedDayTextView)) {
-                        mLastClickedDayTextView.setTextColor(mCalendarProperties.getDaysLabelsColor());
-                        mLastClickedDayTextView.setTypeface(Typeface.DEFAULT);
-                    }
-                }
-                mLastClickedDayTextView = dayTextView;
-
-            }
-        };
-
-        //( (View) dayTextView.getParent()).setOnClickListener(dayClickListener);
-        //dayIcon.setOnClickListener(dayClickListener);
     }
 
 }
