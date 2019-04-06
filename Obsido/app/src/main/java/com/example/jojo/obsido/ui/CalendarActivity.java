@@ -32,8 +32,9 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import com.example.jojo.obsido.R;
-
 import com.example.jojo.obsido.SettingsActivity;
+
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,13 +65,14 @@ public class CalendarActivity extends AppCompatActivity implements
 
     @Override
     public void onCalendarDayClicked(Calendar clickedCalendar) {
-        List<Event> events = eventViewModel.getAllEvents().getValue();
         mCalendarEvents = new ArrayList<>();
+        List<Event> events = eventViewModel.getAllEvents().getValue();
         for(int i = 0; i < events.size(); i++) {
             Event currentEvent = events.get(i);
-            Date eventCalendar = currentEvent.getDate();
+            Calendar eventCalendar = Calendar.getInstance();
+            eventCalendar.setTime(currentEvent.getDate());
 
-            if(eventCalendar.equals(clickedCalendar.getTime())) {
+            if(DateUtils.isSameDay(eventCalendar, clickedCalendar)) {
                 mCalendarEvents.add(currentEvent);
             }
         }
