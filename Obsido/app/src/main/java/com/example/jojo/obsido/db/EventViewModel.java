@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.example.jojo.obsido.db.repository.EventRepository;
 
+import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -39,4 +40,5 @@ public class EventViewModel extends AndroidViewModel {
     public LiveData<List<Event>> getAllEvents() {
         return allEvents;
     }
+
 }

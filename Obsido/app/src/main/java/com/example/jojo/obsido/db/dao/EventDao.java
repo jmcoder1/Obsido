@@ -29,5 +29,4 @@ public interface EventDao {
     @Query("SELECT * FROM events")
     LiveData<List<Event>> getAllEvents();
 
-    // TODO: Add stuff for event database
 }

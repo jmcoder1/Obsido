@@ -7,7 +7,6 @@ import android.content.res.ColorStateList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
@@ -25,8 +24,7 @@ import android.view.MenuItem;
 
 import com.example.jojo.obsido.db.Event;
 import com.example.jojo.obsido.db.EventViewModel;
-import com.example.jojo.obsido.db.Partner;
-import com.example.jojo.obsido.db.PartnerViewModel;
+import com.example.jojo.obsido.fragments.CalendarEventFragment;
 import com.example.jojo.obsido.fragments.CalendarFragment;
 import com.example.jojo.obsido.utils.SharedPreferenceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,15 +35,59 @@ import com.example.jojo.obsido.R;
 
 import com.example.jojo.obsido.SettingsActivity;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class CalendarActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        NavigationView.OnNavigationItemSelectedListener, CalendarFragment.OnCalendarDatePass,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String LOG_TAG = "CalendarActivity".getClass().getSimpleName();
 
     private CalendarFragment mCalendarFragment;
+    private List<Event> mCalendarEvents;
+
+    @Override
+    public void onCalendarMonthPass(Calendar calendarDate) {
+        List<Event> events = eventViewModel.getAllEvents().getValue();
+        mCalendarEvents = new ArrayList<>();
+        for(int i = 0; i < events.size(); i++) {
+            Event currentEvent = events.get(i);
+            Calendar eventCalendar = Calendar.getInstance();
+            eventCalendar.setTime(currentEvent.getDate());
+
+            if(eventCalendar.get(Calendar.MONTH) == calendarDate.get(Calendar.MONTH) &&
+                    eventCalendar.get(Calendar.YEAR) == calendarDate.get(Calendar.YEAR)) {
+                mCalendarEvents.add(currentEvent);
+            }
+        }
+
+        if(mCalendarEvents != null) {
+            mCalendarEventFragment.setEvents(mCalendarEvents);
+        }
+    }
+
+    @Override
+    public void onCalendarDayClicked(Calendar clickedCalendar) {
+        List<Event> events = eventViewModel.getAllEvents().getValue();
+        mCalendarEvents = new ArrayList<>();
+        for(int i = 0; i < events.size(); i++) {
+            Event currentEvent = events.get(i);
+            Date eventCalendar = currentEvent.getDate();
+
+            if(eventCalendar.equals(clickedCalendar.getTime())) {
+                mCalendarEvents.add(currentEvent);
+            }
+        }
+
+        if(mCalendarEvents != null) {
+            mCalendarEventFragment.setEvents(mCalendarEvents);
+        }
+    }
+
+    private CalendarEventFragment mCalendarEventFragment;
 
     public static final int ADD_EVENT_REQUEST = 1;
     public static final int EDIT_EVENT_REQUEST = 2;
@@ -74,8 +116,10 @@ public class CalendarActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         mCalendarFragment = new CalendarFragment();
+        mCalendarEventFragment = new CalendarEventFragment();
         fragmentManager.beginTransaction()
-                .add(R.id.calendar_container, mCalendarFragment)
+                .replace(R.id.calendar_container, mCalendarFragment)
+                .replace(R.id.calendar_event_list_container, mCalendarEventFragment)
                 .commit();
 
         eventViewModel = ViewModelProviders.of(this).get(EventViewModel.class);
@@ -166,7 +210,6 @@ public class CalendarActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.action_calendar_today:
                 return  false;
@@ -190,7 +233,6 @@ public class CalendarActivity extends AppCompatActivity implements
             finish();
             startActivity(mIntent);
         }
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

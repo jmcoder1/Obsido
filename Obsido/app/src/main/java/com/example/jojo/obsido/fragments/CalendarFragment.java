@@ -1,5 +1,6 @@
 package com.example.jojo.obsido.fragments;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
@@ -19,12 +19,9 @@ import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.db.Event;
 import com.example.jojo.obsido.utils.EventUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -32,8 +29,17 @@ import androidx.fragment.app.Fragment;
 
 public class CalendarFragment extends Fragment {
 
+    private OnCalendarDatePass calendarDatePasser;
+    public interface OnCalendarDatePass {
+        void onCalendarMonthPass(Calendar calendarDate);
+        void onCalendarDayClicked(Calendar clickedCalendar);
+    }
+
     private CalendarView mCalendarView;
     private boolean mEventsHidden = false;
+
+    private Calendar currentCalendarMonth;
+    private Calendar clickedCalendarDay;
 
     private Toolbar mToolbar;
 
@@ -92,31 +98,12 @@ public class CalendarFragment extends Fragment {
                 if(mToolbar != null) {
                     try {
                         mToolbar.setTitle(mCalendarView.getCalendarTitleDate());
-
-                        Calendar currentPageDate = mCalendarView.getCurrentPageDate();
-                        List<EventDay> calEventDays = mCalendarView.getEventDays();
-                        int numEventDays = 0;
-                        for(int i = 0; i < calEventDays.size(); i++) {
-                            EventDay currEventDay = calEventDays.get(i);
-                            if(currEventDay.getCalendar().get(Calendar.MONTH) ==
-                                    currentPageDate.get(Calendar.MONTH) &&
-                                    currEventDay.getCalendar().get(Calendar.YEAR) ==
-                                            currentPageDate.get(Calendar.YEAR)) {
-                                numEventDays++;
-                            }
-                        }
-
-                        if(numEventDays > 0) {
-                            final SimpleDateFormat stringDateFormat = new SimpleDateFormat(
-                                    "MM", Locale.UK);
-                            Toast.makeText(getContext(), numEventDays + " event days in " +
-                                    stringDateFormat.format(currentPageDate.getTime()), Toast.LENGTH_SHORT).show();
-                        }
-
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
                 }
+                currentCalendarMonth = mCalendarView.getCurrentPageDate();
+                calendarDatePasser.onCalendarMonthPass(currentCalendarMonth);
             }
         });
 
@@ -126,52 +113,20 @@ public class CalendarFragment extends Fragment {
                 if(mToolbar != null) {
                     try {
                         mToolbar.setTitle(mCalendarView.getCalendarTitleDate());
-
-                        Calendar currentPageDate = mCalendarView.getCurrentPageDate();
-                        List<EventDay> calEventDays = mCalendarView.getEventDays();
-                        int numEventDays = 0;
-                        for(int i = 0; i < calEventDays.size(); i++) {
-                            EventDay currEventDay = calEventDays.get(i);
-                            if(currEventDay.getCalendar().get(Calendar.MONTH) ==
-                                    currentPageDate.get(Calendar.MONTH) &&
-                                    currEventDay.getCalendar().get(Calendar.YEAR) ==
-                                    currentPageDate.get(Calendar.YEAR)) {
-                                numEventDays++;
-                            }
-                        }
-
-                        if(numEventDays > 0) {
-                            final SimpleDateFormat stringDateFormat = new SimpleDateFormat(
-                                    "MM", Locale.UK);
-                            Toast.makeText(getContext(), numEventDays + " event days in " +
-                                    stringDateFormat.format(currentPageDate.getTime()), Toast.LENGTH_SHORT).show();
-                        }
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
                 }
+                currentCalendarMonth = mCalendarView.getCurrentPageDate();
+                calendarDatePasser.onCalendarMonthPass(currentCalendarMonth);
             }
         });
 
         mCalendarView.setOnDayClickListener(new OnDayClickListener() {
             @Override
             public void onDayClick(EventDay eventDay) {
-                List<EventDay> calEventDays = mCalendarView.getEventDays();
-                int numEventDays = 0;
-                for(int i = 0; i < calEventDays.size(); i++) {
-                    if(calEventDays.get(i).getCalendar().getTime().equals(eventDay.getCalendar()
-                            .getTime())) {
-                        numEventDays++;
-                    }
-                }
-
-                if(numEventDays > 0) {
-                    final SimpleDateFormat stringDateFormat = new SimpleDateFormat(
-                            "dd-MM-yyyy", Locale.UK);
-                    Date clickedDayCalendar = eventDay.getCalendar().getTime();
-                    Toast.makeText(getContext(), numEventDays + " event days at " +
-                            stringDateFormat.format(clickedDayCalendar), Toast.LENGTH_SHORT).show();
-                }
+                clickedCalendarDay = eventDay.getCalendar();
+                calendarDatePasser.onCalendarDayClicked(clickedCalendarDay);
             }
         });
 
@@ -212,7 +167,24 @@ public class CalendarFragment extends Fragment {
         } catch(OutOfDateRangeException e) {
             e.printStackTrace();
         }
+        currentCalendarMonth = mCalendarView.getCurrentPageDate();
+        calendarDatePasser.onCalendarMonthPass(calToday);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCalendarDatePass) {
+            calendarDatePasser = (OnCalendarDatePass) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnCalendarDatePass");
+        }
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        calendarDatePasser = null;
+    }
 }
