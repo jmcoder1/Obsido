@@ -201,6 +201,7 @@ public class CalendarView extends LinearLayout {
 
     private void setUpCalendarPosition(Calendar calendar) {
         DateUtils.setMidnight(calendar);
+        mCalendarTitleDate = DateUtils.getMonthAndYearDate(mContext, calendar);
 
         if (mCalendarProperties.getCalendarType() == CalendarView.ONE_DAY_PICKER) {
             mCalendarProperties.setSelectedDay(calendar);

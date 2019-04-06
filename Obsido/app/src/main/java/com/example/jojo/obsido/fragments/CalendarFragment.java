@@ -137,6 +137,8 @@ public class CalendarFragment extends Fragment {
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
+            currentCalendarMonth = mCalendarView.getCurrentPageDate();
+            // calendarDatePasser.onCalendarMonthPass(currentCalendarMonth);
         }
     }
 

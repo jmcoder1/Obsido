@@ -48,21 +48,14 @@ public class CalendarActivity extends AppCompatActivity implements
 
     private CalendarFragment mCalendarFragment;
     private List<Event> mCalendarEvents;
+    private Calendar currentCalendarDate;
 
     @Override
     public void onCalendarMonthPass(Calendar calendarDate) {
-        List<Event> events = eventViewModel.getAllEvents().getValue();
+        currentCalendarDate = calendarDate;
         mCalendarEvents = new ArrayList<>();
-        for(int i = 0; i < events.size(); i++) {
-            Event currentEvent = events.get(i);
-            Calendar eventCalendar = Calendar.getInstance();
-            eventCalendar.setTime(currentEvent.getDate());
-
-            if(eventCalendar.get(Calendar.MONTH) == calendarDate.get(Calendar.MONTH) &&
-                    eventCalendar.get(Calendar.YEAR) == calendarDate.get(Calendar.YEAR)) {
-                mCalendarEvents.add(currentEvent);
-            }
-        }
+        List<Event> events = eventViewModel.getAllEvents().getValue();
+        mCalendarEvents = getEventsByDate(events, calendarDate);
 
         if(mCalendarEvents != null) {
             mCalendarEventFragment.setEvents(mCalendarEvents);
@@ -117,6 +110,7 @@ public class CalendarActivity extends AppCompatActivity implements
 
         mCalendarFragment = new CalendarFragment();
         mCalendarEventFragment = new CalendarEventFragment();
+
         fragmentManager.beginTransaction()
                 .replace(R.id.calendar_container, mCalendarFragment)
                 .replace(R.id.calendar_event_list_container, mCalendarEventFragment)
@@ -127,9 +121,32 @@ public class CalendarActivity extends AppCompatActivity implements
             @Override
             public void onChanged(@Nullable List<Event> events) {
                 mCalendarFragment.setEvents(events);
+                if(mCalendarEvents != null) {
+                    List<Event> matchingEvents = getEventsByDate(events, currentCalendarDate);
+                    mCalendarEventFragment.setEvents(matchingEvents);
+                }
             }
         });
 
+    }
+
+    private List<Event> getEventsByDate(List<Event> events, Calendar calendarDate) {
+        mCalendarEvents = new ArrayList<>();
+        try {
+            for(int i = 0; i < events.size(); i++) {
+                Event currentEvent = events.get(i);
+                Calendar eventCalendar = Calendar.getInstance();
+                eventCalendar.setTime(currentEvent.getDate());
+
+                if(eventCalendar.get(Calendar.MONTH) == calendarDate.get(Calendar.MONTH) &&
+                        eventCalendar.get(Calendar.YEAR) == calendarDate.get(Calendar.YEAR)) {
+                    mCalendarEvents.add(currentEvent);
+                }
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return mCalendarEvents;
     }
 
     private void setUpSharedPreference() {
@@ -297,6 +314,7 @@ public class CalendarActivity extends AppCompatActivity implements
                     eventActs[Event.EVENT_HANDJOB_INDEX], eventActs[Event.EVENT_BLOWJOB_INDEX],
                     eventActs[Event.EVENT_ANAL_INDEX]);
             eventViewModel.insert(event);
+
 
             Snackbar.make(getWindow().getDecorView().getRootView(), "Partner saved",
                     Snackbar.LENGTH_LONG).setAction("Action", null).show();

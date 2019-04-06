@@ -74,6 +74,8 @@ public class CalendarEventFragment extends Fragment {
         calendarEventRecyclerView.setAdapter(calendarEventAdapter);
 
         calendarEventAdapter.submitList(mEvents);
+        calendarEventAdapter.notifyDataSetChanged();
+
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
