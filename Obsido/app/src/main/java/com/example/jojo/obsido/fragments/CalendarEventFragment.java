@@ -11,6 +11,8 @@ import com.example.jojo.obsido.CalendarEventAdapter;
 import com.example.jojo.obsido.R;
 import com.example.jojo.obsido.db.Event;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -48,7 +50,18 @@ public class CalendarEventFragment extends Fragment {
     public void setEvents(List<Event> events) {
         mEvents = events;
         calendarEventAdapter.submitList(mEvents);
+        sortEventList();
 
+    }
+
+    private void sortEventList() {
+        Collections.sort(mEvents, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                return event1.getDate().compareTo(event2.getDate());
+            }
+        });
+        calendarEventAdapter.notifyDataSetChanged();
     }
 
     private void initRecyclerView() {

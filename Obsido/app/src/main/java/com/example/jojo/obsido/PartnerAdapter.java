@@ -81,7 +81,6 @@ public class PartnerAdapter extends ListAdapter<Partner, PartnerAdapter.PartnerH
                     if(listener != null && position != RecyclerView.NO_POSITION) {
                         listener.onItemClick(getItem(position));
                     }
-
                 }
             });
         }
