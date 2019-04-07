@@ -49,7 +49,10 @@ public class CalendarEventFragment extends Fragment {
 
     public void setEvents(List<Event> events) {
         mEvents = events;
-        calendarEventAdapter.submitList(mEvents);
+
+        if(calendarEventAdapter != null) {
+            calendarEventAdapter.submitList(mEvents);
+        }
         sortEventList();
 
     }
@@ -61,7 +64,9 @@ public class CalendarEventFragment extends Fragment {
                 return event1.getDate().compareTo(event2.getDate());
             }
         });
-        calendarEventAdapter.notifyDataSetChanged();
+        if(calendarEventAdapter != null) {
+            calendarEventAdapter.notifyDataSetChanged();
+        }
     }
 
     private void initRecyclerView() {

@@ -85,7 +85,12 @@ public class CalendarFragment extends Fragment {
         View rootViewCalendar = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         mCalendarView = rootViewCalendar.findViewById(R.id.calendarView);
-        mToolbar = getActivity().findViewById(R.id.toolbar);
+
+        try {
+            mToolbar = getActivity().findViewById(R.id.toolbar);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
         initCalendarView();
         return rootViewCalendar;
@@ -138,7 +143,7 @@ public class CalendarFragment extends Fragment {
                 e.printStackTrace();
             }
             currentCalendarMonth = mCalendarView.getCurrentPageDate();
-            // calendarDatePasser.onCalendarMonthPass(currentCalendarMonth);
+            calendarDatePasser.onCalendarMonthPass(currentCalendarMonth);
         }
     }
 
@@ -174,7 +179,7 @@ public class CalendarFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnCalendarDatePass) {
             calendarDatePasser = (OnCalendarDatePass) context;
